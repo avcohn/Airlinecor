@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הסכמי קורפורייט ממשלה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Assistant:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAF6EE;
+    --bg-soft:#F3ECDC;
+    --card:#FFFFFF;
+    --navy:#152944;
+    --navy-deep:#0C1B2E;
+    --navy-mid:#24405f;
+    --gold:#B68D4C;
+    --gold-light:#D9BD87;
+    --gold-pale:#F0E3C8;
+    --line:#E6DCC2;
+    --text-hi:#182A3E;
+    --text-mid:#5E6F80;
+    --text-low:#9BA8B4;
+    --radius:4px;
+    --serif:'Frank Ruhl Libre', serif;
+    --sans:'Assistant', sans-serif;
+    --mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 260px),
+      var(--bg);
+    color:var(--text-hi);
+    font-family:var(--sans);
+    min-height:100vh;
+    padding-bottom:70px;
+  }
+  ::selection{background:var(--gold-light); color:var(--navy-deep);}
+
+  /* header */
+  header{
+    background:var(--navy-deep);
+    background-image:
+      radial-gradient(ellipse 700px 300px at 15% 0%, rgba(182,141,76,0.16), transparent 60%),
+      linear-gradient(180deg, var(--navy-deep), var(--navy));
+    padding:34px 24px 30px;
+    position:relative;
+    border-bottom:3px solid var(--gold);
+  }
+  header::after{
+    content:'';
+    position:absolute; bottom:-3px; left:0; right:0; height:3px;
+    background:linear-gradient(90deg, transparent, var(--gold-light), var(--gold), var(--gold-light), transparent);
+  }
+  .head-inner{max-width:1180px; margin:0 auto;}
+  .eyebrow{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.22em;
+    color:var(--gold-light); text-transform:uppercase; margin-bottom:12px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow .line{height:1px; width:34px; background:var(--gold-light); opacity:.55;}
+  h1{
+    margin:0 0 20px; font-family:var(--serif); font-weight:700;
+    font-size:clamp(26px,4.4vw,38px); letter-spacing:.01em; color:#FBF7EE;
+  }
+  h1 em{color:var(--gold-light); font-style:normal; font-weight:400;}
+
+  .search-row{display:flex; gap:12px; flex-wrap:wrap; align-items:center;}
+  .search-wrap{position:relative; flex:1; min-width:220px;}
+  .search-wrap svg{position:absolute; top:50%; right:16px; transform:translateY(-50%); color:var(--navy-mid); pointer-events:none;}
+  #search{
+    width:100%; background:#FBF7EE; border:1px solid transparent; border-radius:2px;
+    padding:13px 44px 13px 16px; color:var(--navy-deep); font-family:var(--sans); font-size:15px;
+    font-weight:600; outline:none; transition:box-shadow .15s;
+  }
+  #search:focus{box-shadow:0 0 0 2px var(--gold);}
+  #search::placeholder{color:var(--text-low); font-weight:500;}
+
+  .stat-pill{
+    font-family:var(--mono); font-size:11.5px; color:var(--gold-light);
+    border:1px solid rgba(217,189,135,0.4); border-radius:20px; padding:9px 16px;
+    white-space:nowrap; letter-spacing:.03em;
+  }
+  .stat-pill b{color:#FBF7EE; font-weight:700;}
+
+  /* main layout */
+  main{max-width:1180px; margin:0 auto; padding:32px 24px 0;}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(360px,1fr));
+    gap:22px;
+  }
+
+  /* boarding pass card */
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    box-shadow:0 1px 2px rgba(21,41,68,0.06), 0 10px 30px -14px rgba(21,41,68,0.18);
+    overflow:hidden;
+    display:flex; flex-direction:column;
+    transition:box-shadow .2s, transform .2s;
+    border:1px solid var(--line);
+  }
+  .card:hover{ box-shadow:0 4px 10px rgba(21,41,68,0.08), 0 20px 40px -16px rgba(21,41,68,0.28); transform:translateY(-2px); }
+
+  .card-top{
+    background:linear-gradient(135deg, var(--navy), var(--navy-deep));
+    padding:18px 20px 16px;
+    position:relative;
+  }
+  .card-top::before{
+    content:''; position:absolute; top:10px; left:14px;
+    font-family:var(--mono); font-size:9px; letter-spacing:.15em; color:var(--gold-light); opacity:.5;
+  }
+  .card-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
+  .airline-name{
+    font-family:var(--serif); font-size:16.5px; font-weight:700; color:#FBF7EE; line-height:1.35;
+  }
+  .codes{display:flex; gap:8px; flex-wrap:wrap; direction:ltr; justify-content:flex-start; margin-top:10px;}
+  .code-chip{
+    display:flex; align-items:center; gap:6px;
+    font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.03em;
+    color:var(--navy-deep); background:var(--gold-light);
+    padding:2px 9px 2px 2px; border-radius:20px;
+  }
+  .code-logo{
+    width:18px; height:18px; border-radius:50%; background:#fff; object-fit:contain;
+    padding:2px; flex:none; display:block;
+  }
+  .code-logo.hidden{display:none;}
+  .nofee-badge{
+    font-family:var(--mono); font-size:10px; font-weight:700; color:var(--navy-deep);
+    background:var(--gold); padding:4px 10px; border-radius:20px; letter-spacing:.04em;
+    flex:none; white-space:nowrap; align-self:flex-start;
+  }
+
+  /* perforation divider */
+  .perf{
+    position:relative; height:0; border-top:2px dashed var(--gold-light);
+    margin:0 0;
+  }
+  .perf::before, .perf::after{
+    content:''; position:absolute; top:-9px; width:18px; height:18px; border-radius:50%;
+    background:var(--bg);
+  }
+  .perf::before{ right:-9px; }
+  .perf::after{ left:-9px; }
+
+  .card-body{padding:18px 20px 20px; display:flex; flex-direction:column; gap:12px; flex:1;}
+
+  .field{
+    border-bottom:1px solid var(--line);
+    padding:8px 0; display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .field:last-of-type{border-bottom:none;}
+  .field-label{font-size:11.5px; color:var(--text-mid); font-weight:700; flex:none; max-width:40%;}
+  .field-value-wrap{display:flex; align-items:center; gap:8px; min-width:0; flex:1; justify-content:flex-end;}
+  .field-value{
+    font-family:var(--mono); font-size:13px; color:var(--navy-deep); direction:ltr; text-align:left;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:500;
+  }
+  .copy-btn{
+    flex:none; width:26px; height:26px; border-radius:50%; border:1px solid var(--line);
+    background:var(--bg); color:var(--text-mid); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition:all .15s;
+  }
+  .copy-btn:hover{color:var(--navy-deep); border-color:var(--gold); background:var(--gold-pale);}
+  .copy-btn.copied{color:#FBF7EE; background:var(--gold); border-color:var(--gold);}
+  .copy-btn svg{width:12px; height:12px;}
+
+  .multi-field{align-items:flex-start;}
+  .multi-field .field-value-wrap{flex-direction:column; align-items:flex-end; gap:6px;}
+
+  .dest-list{display:flex; flex-wrap:wrap; gap:5px; direction:ltr; justify-content:flex-start;}
+  .dest-tag{
+    font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--navy-mid);
+    background:var(--bg-soft); border:1px solid var(--line); padding:2px 8px; border-radius:2px;
+  }
+
+  .benefits{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px;}
+  .benefits li{font-size:12.5px; color:var(--text-mid); line-height:1.55; padding-right:16px; position:relative;}
+  .benefits li::before{
+    content:'✦'; position:absolute; right:0; top:0; font-size:10px; color:var(--gold);
+  }
+
+  .section-label{
+    font-size:10.5px; font-weight:800; color:var(--gold); text-transform:uppercase;
+    letter-spacing:.1em; font-family:var(--sans); margin:2px 0 -3px;
+  }
+
+  .note{
+    font-size:12px; color:var(--navy-mid); background:var(--gold-pale);
+    border-right:3px solid var(--gold); border-radius:2px; padding:9px 12px; line-height:1.55;
+  }
+  .note.warn{color:#7A2E22; background:#FBEAE4; border-right-color:#C4574A;}
+  .field-note{
+    font-size:11px; color:var(--text-mid); font-style:italic; margin-top:-6px;
+  }
+
+  .empty-state{text-align:center; padding:70px 20px; color:var(--text-low); display:none;}
+  .empty-state.show{display:block;}
+  .empty-state svg{margin-bottom:14px; opacity:.35;}
+
+  footer{
+    max-width:1180px; margin:44px auto 0; padding:18px 24px 0; border-top:1px solid var(--line);
+    font-family:var(--mono); font-size:10.5px; color:var(--text-low); text-align:center; letter-spacing:.05em;
+  }
+
+  @media (max-width:480px){
+    .grid{grid-template-columns:1fr;}
+    header{padding:26px 16px 24px;}
+    main{padding:24px 16px 0;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <div class="eyebrow"><span class="line"></span>AMSALEM TOURS · חטיבת משרדי ממשלה</div>
+    <h1>הסכמי קורפורייט <em>· חברות תעופה</em></h1>
+    <div class="search-row">
+      <div class="search-wrap">
+        <input id="search" type="text" placeholder="חיפוש לפי חברת תעופה, קוד IATA, תמחור...">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      </div>
+      <div class="stat-pill">מציג <b id="count">0</b> הסכמים</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="grid" id="grid"></div>
+  <div class="empty-state" id="empty">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <div>לא נמצאו הסכמים תואמים</div>
+  </div>
+</main>
+
+<footer>מסמך פנימי · Amsalem Tours</footer>
+
+<script>
+const DATA = [
+  {
+    name: "אל על — במערכת הישראלית",
+    codes: ["LY"],
+    fields: [
+      {label:"הערת קורפורייט", value:"SRCODP-12686"},
+      {label:"פקודת תמחור", value:"fxr/r,u*igo00"},
+      {label:"אמצעי תשלום", value:"fpagt*v123456%com12686"},
+    ],
+    destinations: ["TLV","LON","ZRH","ROM","NYC","PAR","BER","WAS","GVA","DXB","FRA","USA","Europe"],
+    destLabel: "יעדי יציאה בהסכם",
+    benefits: [
+      "מחויבות על אישור מקום ב-Y עד 48 שעות לפני הטיסה (כל עוד הטיסה עד 5 מקומות ו/או אין עליה עוצרת מחויבות — יש להכניס קורפורייט להזמנה ולפנות למוקד אל על לאישור)",
+      "שינוי שם עד הכרטוס ללא עלות (יש לפנות למוקד אל על)",
+      "שינוי וביטול כרטיסי קלאסיק ללא עלות, הבדלים במחיר בלבד (מופיע בתנאי כרטיס)",
+      "במידה ואין תמחור עם IGO00, יש לתמחר קור05, לא צריך אישור מיוחד",
+      "במידה ואין גם קור05, יש לפנות למוקד לקבלת תמחור ידני — בטיסות ישירות בלבד",
+    ],
+    noFee: true
+  },
+  {
+    name: "אל על — במערכת האמריקאית",
+    codes: ["LY"],
+    fields: [
+      {label:"הערת קורפורייט", value:"SRCODP-12686"},
+      {label:"פקודת תמחור", value:"fxr/r,u*cor05"},
+      {label:"אמצעי תשלום", value:"fPCASH"},
+      {label:"Tour Code", value:"FT*GOVCOR05"},
+    ],
+    benefits: [],
+    noFee: true
+  },
+  {
+    name: "דלתא, KLM, אייר פרנס",
+    codes: ["DL","AF","KL"],
+    fields: [
+      {label:"הערת קורפורייט", value:"OSYYOINILGOVIL"},
+      {label:"הערת קורפורייט דלתא", value:"OSDLCORPORATE YA43"},
+      {label:"פקודת תמחור", value:"fxr/r,u055761"},
+      {label:"אמצעי תשלום", value:"FPCASH"},
+    ],
+    benefits: [
+      "הזזה של time limit — החל ממחלקות מסוימות",
+      "הושבה ללא עלות במושבים רגילים",
+      "החלפת שם מלא ללא עלות לאחר כרטוס",
+      "תעריפים מיוחדים — מתמחר אוטומטית לפי פקודת תמחור של הממשלה",
+      "הלקוח ידוע כעסקי ברגע שיש קוד ויטופל בקדימות מנוסע אחר",
+      "מחיר עם הסכם של DL הוא ללא עמלה",
+    ],
+    note: "בתנאי שהכנסתם את הערת הקורפורייט של הממשלה בהזמנה"
+  },
+  {
+    name: "טורקיש איירליינס",
+    codes: ["TK"],
+    fields: [
+      {label:"Tour Code", value:"FT*CCC24639", note:"מכניס אוטומטית עם הדאטא"},
+      {label:"הטבת הושבה", value:"SR*CLIDTKHK/TKCCC24639000", note:"רק אם יש שימוש בתעריף הסכם"},
+      {label:"פקודת תמחור", value:"fxr/r,u571844"},
+      {label:"אמצעי תשלום", value:"FPCASH"},
+    ],
+    destinations: ["Israel","Uzbekistan","China","India","Sri Lanka","Moldova","Azerbaijan"],
+    destLabel: "POO",
+    benefits: [],
+    note: "כל יעד רשום בהסכם כ-POO ומתמחר הסכם — יש עמלה גם אם זה לא יציאה מת\"א",
+    warn:true
+  },
+  {
+    name: "ITA איירליינס",
+    codes: ["AZ"],
+    fields: [
+      {label:"פקודת תמחור", value:"fxr/r,u131472"},
+      {label:"הערכת קורפרייט", value:"SR CLID AZ HK/AZ131472", multi:["SR CLID AZ HK/AZ131472","OS YY FQTB 131472"], note:"חובה להכניס את שניהם"},
+      {label:"אמצעי תשלום", value:"FPCASH"},
+      {label:"תמחור כרטיס גמיש", value:"fxb/r,u131472/ff-ecoflex"},
+    ],
+    benefits: [
+      "הושבה רגילה גם כשאין מחיר הסכם — ניתן להוסיף OSI",
+      "הזזת טיים לימיט",
+    ]
+  },
+  {
+    name: "אייר קנדה, לופטנזה, סוויס, ברסלס אייר, אוסטריאן, יונייטד",
+    codes: ["AC","LH","LX","SN","OS","UA","IT"],
+    fields: [
+      {label:"הערת קורפורייט", value:"FT*1CF306866", note:"חובה — אם מתמחרים עם קורפורייט זה נכנס אוטומטית, אחרת יש להכניס"},
+      {label:"פקודת תמחור רגילה", value:"fxr/r,u306866"},
+      {label:"פק' תמחור — תעריף ללא עלויות ביטול/שינוי", value:"fxr/r,u306866,*npe"},
+      {label:"אמצעי תשלום", value:"FPCASH"},
+    ],
+    benefits: [],
+    note: "ההסכם לאירופה, צפון, מרכז ודרום אמריקה · ניתן לשלב בין חברות התעופה"
+  },
+  {
+    name: "אייר אירופה",
+    codes: ["UX"],
+    fields: [
+      {label:"הערת קורפורייט", value:"FT*521702", note:"חובה — אם מתמחרים עם קורפורייט זה נכנס אוטומטית, אחרת יש להכניס"},
+      {label:"פקודת תמחור רגילה", value:"fxr/r,u521702"},
+      {label:"תמחור כרטיס גמיש", value:"fxr/ff-flex/r,u521702"},
+      {label:"אמצעי תשלום", value:"FPCASH"},
+    ],
+    benefits: [],
+    note: "ההסכם הוא לכל היעדים של אייר אירופה, לא רק ליציאה מישראל"
+  },
+  {
+    name: "אמריקן איירליינס, בריטיש איירווייז, איבריה, ג'אפן איירליינס",
+    codes: ["AA","BA","IB","JL"],
+    fields: [
+      {label:"הערת קורפורייט", value:"FT*IN17813GB", note:"חובה — אם מתמחרים עם קורפורייט זה נכנס אוטומטית, אחרת יש להכניס"},
+      {label:"AA Ticket Designator", value:"XPRSEU"},
+      {label:"JL/BA Ticket Designator", value:"CED*"},
+      {label:"IB Ticket Designator", value:"E9CED*"},
+      {label:"AA Corporate SRCLID", value:"SR*CLIDAAHK/AAIN17813GB"},
+      {label:"BA/IB Corporate SRCLID", value:"SR*CLIDIBHK/IN17813D01", multi:["SR*CLIDIBHK/IN17813D01","SR*CLIDBAHK/IN17813D01"]},
+      {label:"פקודת תמחור רגילה", value:"fxr/r,u045249"},
+      {label:"אמצעי תשלום", value:"FPCASH"},
+    ],
+    benefits: [],
+    note: "ההסכם הוא לכל היעדים וניתן לשלב בין חברות התעופה"
+  },
+  {
+    name: "אתיופיאן",
+    codes: ["ET"],
+    fields: [
+      {label:"הערות קורפורייט", value:"FT*TLV133", multi:["FT*TLV133","OSET corporate TLVCO133"], note:"חובה"},
+      {label:"פקודת תמחור רגילה", value:"FXR/R,U* TLV133"},
+      {label:"אמצעי תשלום", value:"FPCASH"},
+    ],
+    benefits: [],
+    note: "ההסכם הוא לכל היעדים של אתיופיאן, לכל המחלקות, ליציאה מהארץ"
+  },
+  {
+    name: "אייר בלטיק",
+    codes: ["BT"],
+    fields: [
+      {label:"פקודת תמחור רגילה", value:"FXX/R,U402278"},
+      {label:"הערת קורפורייט", value:"OSBT ITCMPIL0005"},
+      {label:"אמצעי תשלום", value:"FPCASH"},
+    ],
+    benefits: [],
+    note: "ההסכם הוא למחיר FLEX, מחיר רגיל יכול להיות זול יותר"
+  },
+  {
+    name: "Emirates",
+    codes: ["EK"],
+    fields: [
+      {label:"פקודת תמחור רגילה", value:"FXX/R,U244022"},
+      {label:"Tour Code", value:"Ft*ZZIHQ3ZZ"},
+      {label:"אמצעי תשלום", value:"FPCASH"},
+    ],
+    benefits: [],
+    note: "יש להכניס טור קוד גם כשלא מתמחר קורפורייט"
+  },
+  {
+    name: "Azerbaijan Airlines",
+    codes: ["J2"],
+    fields: [
+      {label:"פקודת תמחור רגילה", value:"FXX/R,U333075"},
+      {label:"Tour Code", value:"Ft*ILD00008"},
+      {label:"אמצעי תשלום", value:"FPCASH"},
+    ],
+    benefits: []
+  },
+  {
+    name: "Etihad",
+    codes: ["EY"],
+    fields: [
+      {label:"פקודת תמחור רגילה", value:"FXX/R,U333075"},
+      {label:"Tour Code", value:"Ft*ILD00008"},
+      {label:"אמצעי תשלום", value:"FPCASH"},
+    ],
+    benefits: []
+  },
+];
+
+const grid = document.getElementById('grid');
+const search = document.getElementById('search');
+const countEl = document.getElementById('count');
+const emptyEl = document.getElementById('empty');
+
+function copySvg(){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+}
+function checkSvg(){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+}
+
+function makeField(f){
+  const outer = document.createElement('div');
+  outer.style.display='flex'; outer.style.flexDirection='column'; outer.style.gap='4px';
+
+  const wrap = document.createElement('div');
+  wrap.className = 'field' + (f.multi ? ' multi-field' : '');
+
+  const label = document.createElement('div');
+  label.className = 'field-label';
+  label.textContent = f.label;
+  wrap.appendChild(label);
+
+  const valWrap = document.createElement('div');
+  valWrap.className = 'field-value-wrap';
+
+  if(f.multi){
+    f.multi.forEach(v=>{
+      const row = document.createElement('div');
+      row.style.display='flex'; row.style.alignItems='center'; row.style.gap='8px';
+      const val = document.createElement('div');
+      val.className='field-value'; val.textContent=v;
+      const btn = makeCopyBtn(v);
+      row.appendChild(val); row.appendChild(btn);
+      valWrap.appendChild(row);
+    });
+  } else {
+    const val = document.createElement('div');
+    val.className = 'field-value';
+    val.textContent = f.value;
+    val.title = f.value;
+    const btn = makeCopyBtn(f.value);
+    valWrap.appendChild(val);
+    valWrap.appendChild(btn);
+  }
+
+  wrap.appendChild(valWrap);
+  outer.appendChild(wrap);
+
+  if(f.note){
+    const noteEl = document.createElement('div');
+    noteEl.className='field-note';
+    noteEl.textContent = f.note;
+    outer.appendChild(noteEl);
+  }
+
+  return outer;
+}
+
+function makeCopyBtn(text){
+  const btn = document.createElement('button');
+  btn.className='copy-btn';
+  btn.innerHTML = copySvg();
+  btn.type='button';
+  btn.setAttribute('aria-label','העתק');
+  btn.addEventListener('click', ()=>{
+    navigator.clipboard.writeText(text).then(()=>{
+      btn.innerHTML = checkSvg();
+      btn.classList.add('copied');
+      setTimeout(()=>{ btn.innerHTML = copySvg(); btn.classList.remove('copied'); }, 1300);
+    });
+  });
+  return btn;
+}
+
+function renderCard(item){
+  const card = document.createElement('div');
+  card.className='card';
+
+  const top = document.createElement('div');
+  top.className='card-top';
+  const head = document.createElement('div');
+  head.className='card-head';
+  const left = document.createElement('div');
+  const nameEl = document.createElement('div');
+  nameEl.className='airline-name';
+  nameEl.textContent = item.name;
+  const codesEl = document.createElement('div');
+  codesEl.className='codes';
+  item.codes.forEach(c=>{
+    const chip = document.createElement('span');
+    chip.className='code-chip';
+    const logo = document.createElement('img');
+    logo.className='code-logo';
+    logo.src = `https://images.kiwi.com/airlines/64/${c}.png`;
+    logo.alt = '';
+    logo.loading = 'lazy';
+    logo.addEventListener('error', ()=> logo.classList.add('hidden'));
+    const label = document.createElement('span');
+    label.textContent = c;
+    chip.appendChild(logo);
+    chip.appendChild(label);
+    codesEl.appendChild(chip);
+  });
+  left.appendChild(nameEl);
+  left.appendChild(codesEl);
+  head.appendChild(left);
+  if(item.noFee){
+    const b = document.createElement('span');
+    b.className='nofee-badge';
+    b.textContent='ללא עמלה';
+    head.appendChild(b);
+  }
+  top.appendChild(head);
+  card.appendChild(top);
+
+  const perf = document.createElement('div');
+  perf.className='perf';
+  card.appendChild(perf);
+
+  const body = document.createElement('div');
+  body.className='card-body';
+
+  item.fields.forEach(f=> body.appendChild(makeField(f)));
+
+  if(item.destinations){
+    const lbl = document.createElement('div');
+    lbl.className='section-label';
+    lbl.textContent = item.destLabel || 'יעדים';
+    body.appendChild(lbl);
+    const destWrap = document.createElement('div');
+    destWrap.className='dest-list';
+    item.destinations.forEach(d=>{
+      const tag = document.createElement('span');
+      tag.className='dest-tag';
+      tag.textContent = d;
+      destWrap.appendChild(tag);
+    });
+    body.appendChild(destWrap);
+  }
+
+  if(item.benefits && item.benefits.length){
+    const lbl = document.createElement('div');
+    lbl.className='section-label';
+    lbl.textContent = 'הטבות הסכם';
+    body.appendChild(lbl);
+    const ul = document.createElement('ul');
+    ul.className='benefits';
+    item.benefits.forEach(b=>{
+      const li = document.createElement('li');
+      li.textContent = b;
+      ul.appendChild(li);
+    });
+    body.appendChild(ul);
+  }
+
+  if(item.note){
+    const n = document.createElement('div');
+    n.className = 'note' + (item.warn ? ' warn' : '');
+    n.textContent = item.note;
+    body.appendChild(n);
+  }
+
+  card.appendChild(body);
+  return card;
+}
+
+function normalize(s){ return s.toLowerCase(); }
+
+function matches(item, q){
+  if(!q) return true;
+  q = normalize(q);
+  const haystack = [
+    item.name,
+    ...(item.codes||[]),
+    ...(item.fields||[]).flatMap(f=> f.multi ? [f.label, ...f.multi] : [f.label, f.value]),
+    ...(item.benefits||[]),
+    item.note||'',
+    ...(item.destinations||[])
+  ].join(' ');
+  return normalize(haystack).includes(q);
+}
+
+function render(){
+  const q = search.value.trim();
+  grid.innerHTML = '';
+  const filtered = DATA.filter(item=>matches(item,q));
+  filtered.forEach(item=> grid.appendChild(renderCard(item)));
+  countEl.textContent = filtered.length;
+  emptyEl.classList.toggle('show', filtered.length===0);
+}
+
+search.addEventListener('input', render);
+render();
+</script>
+</body>
+</html>
