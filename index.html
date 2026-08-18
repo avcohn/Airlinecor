@@ -21,6 +21,9 @@
     --text-hi:#182A3E;
     --text-mid:#5E6F80;
     --text-low:#9BA8B4;
+    --red:#C4574A;
+    --red-pale:#FBEAE4;
+    --green:#3C7A5A;
     --radius:4px;
     --serif:'Frank Ruhl Libre', serif;
     --sans:'Assistant', sans-serif;
@@ -59,8 +62,9 @@
   .eyebrow{
     font-family:var(--mono); font-size:10.5px; letter-spacing:.22em;
     color:var(--gold-light); text-transform:uppercase; margin-bottom:12px;
-    display:flex; align-items:center; gap:10px;
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:space-between;
   }
+  .eyebrow-left{display:flex; align-items:center; gap:10px;}
   .eyebrow .line{height:1px; width:34px; background:var(--gold-light); opacity:.55;}
   h1{
     margin:0 0 20px; font-family:var(--serif); font-weight:700;
@@ -86,6 +90,17 @@
   }
   .stat-pill b{color:#FBF7EE; font-weight:700;}
 
+  /* top controls: edit mode + show inactive + reset */
+  .ctrl-btn{
+    font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.03em;
+    border:1px solid rgba(217,189,135,0.4); background:transparent; color:var(--gold-light);
+    padding:8px 14px; border-radius:20px; cursor:pointer; transition:all .15s;
+    display:flex; align-items:center; gap:6px; white-space:nowrap;
+  }
+  .ctrl-btn:hover{background:rgba(217,189,135,0.12);}
+  .ctrl-btn.on{background:var(--gold); color:var(--navy-deep); border-color:var(--gold);}
+  .ctrl-btn svg{width:13px; height:13px;}
+
   /* main layout */
   main{max-width:1180px; margin:0 auto; padding:32px 24px 0;}
 
@@ -102,10 +117,27 @@
     box-shadow:0 1px 2px rgba(21,41,68,0.06), 0 10px 30px -14px rgba(21,41,68,0.18);
     overflow:hidden;
     display:flex; flex-direction:column;
-    transition:box-shadow .2s, transform .2s;
+    transition:box-shadow .2s, transform .2s, opacity .2s, filter .2s;
     border:1px solid var(--line);
+    position:relative;
   }
   .card:hover{ box-shadow:0 4px 10px rgba(21,41,68,0.08), 0 20px 40px -16px rgba(21,41,68,0.28); transform:translateY(-2px); }
+  .card.editing{ box-shadow:0 0 0 2px var(--gold), 0 10px 30px -14px rgba(21,41,68,0.18); }
+
+  .card.inactive{ filter:grayscale(0.75); opacity:0.55; }
+  .card.inactive:hover{ transform:none; }
+
+  .stamp{
+    position:absolute; top:38%; left:50%; transform:translate(-50%,-50%) rotate(-16deg);
+    font-family:var(--mono); font-weight:800; font-size:22px; letter-spacing:.12em;
+    color:var(--red); border:3px solid var(--red); border-radius:6px;
+    padding:6px 18px; background:rgba(251,234,228,0.9);
+    text-transform:uppercase; pointer-events:none; z-index:5;
+    box-shadow:0 2px 10px rgba(196,87,74,0.25);
+    display:none;
+    white-space:nowrap;
+  }
+  .card.inactive .stamp{display:block;}
 
   .card-top{
     background:linear-gradient(135deg, var(--navy), var(--navy-deep));
@@ -119,6 +151,10 @@
   .card-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
   .airline-name{
     font-family:var(--serif); font-size:16.5px; font-weight:700; color:#FBF7EE; line-height:1.35;
+    outline:none;
+  }
+  .airline-name[contenteditable="true"]{
+    border-bottom:1px dashed var(--gold-light); cursor:text;
   }
   .codes{display:flex; gap:8px; flex-wrap:wrap; direction:ltr; justify-content:flex-start; margin-top:10px;}
   .code-chip{
@@ -132,11 +168,37 @@
     padding:2px; flex:none; display:block;
   }
   .code-logo.hidden{display:none;}
+
+  .card-top-right{display:flex; flex-direction:column; align-items:flex-end; gap:8px; flex:none;}
   .nofee-badge{
     font-family:var(--mono); font-size:10px; font-weight:700; color:var(--navy-deep);
     background:var(--gold); padding:4px 10px; border-radius:20px; letter-spacing:.04em;
-    flex:none; white-space:nowrap; align-self:flex-start;
+    flex:none; white-space:nowrap;
   }
+
+  .active-toggle{
+    display:flex; align-items:center; gap:7px; cursor:pointer; user-select:none;
+    font-family:var(--mono); font-size:9.5px; letter-spacing:.05em; color:var(--gold-light);
+  }
+  .switch{
+    position:relative; width:32px; height:18px; border-radius:20px;
+    background:rgba(255,255,255,0.18); transition:background .15s; flex:none;
+  }
+  .switch::after{
+    content:''; position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%;
+    background:#FBF7EE; transition:transform .15s;
+  }
+  .active-toggle.is-active .switch{background:var(--green);}
+  .active-toggle.is-active .switch::after{transform:translateX(14px);}
+  .active-toggle:not(.is-active) .switch{background:var(--red);}
+
+  .edit-btn{
+    flex:none; width:26px; height:26px; border-radius:50%; border:1px solid rgba(217,189,135,0.4);
+    background:transparent; color:var(--gold-light); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition:all .15s;
+  }
+  .edit-btn:hover, .edit-btn.on{ background:var(--gold); color:var(--navy-deep); border-color:var(--gold); }
+  .edit-btn svg{width:12px; height:12px;}
 
   /* perforation divider */
   .perf{
@@ -157,11 +219,16 @@
     padding:8px 0; display:flex; align-items:center; justify-content:space-between; gap:10px;
   }
   .field:last-of-type{border-bottom:none;}
-  .field-label{font-size:11.5px; color:var(--text-mid); font-weight:700; flex:none; max-width:40%;}
+  .field-label{font-size:11.5px; color:var(--text-mid); font-weight:700; flex:none; max-width:40%; outline:none;}
+  .field-label[contenteditable="true"]{border-bottom:1px dashed var(--gold); cursor:text;}
   .field-value-wrap{display:flex; align-items:center; gap:8px; min-width:0; flex:1; justify-content:flex-end;}
   .field-value{
     font-family:var(--mono); font-size:13px; color:var(--navy-deep); direction:ltr; text-align:left;
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:500;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:500; outline:none;
+  }
+  .field-value[contenteditable="true"]{
+    white-space:normal; border-bottom:1px dashed var(--gold); cursor:text; background:var(--gold-pale);
+    padding:2px 6px; border-radius:2px;
   }
   .copy-btn{
     flex:none; width:26px; height:26px; border-radius:50%; border:1px solid var(--line);
@@ -172,8 +239,15 @@
   .copy-btn.copied{color:#FBF7EE; background:var(--gold); border-color:var(--gold);}
   .copy-btn svg{width:12px; height:12px;}
 
+  .remove-line-btn{
+    flex:none; width:22px; height:22px; border-radius:50%; border:1px solid var(--red);
+    background:var(--red-pale); color:var(--red); cursor:pointer; font-size:14px; line-height:1;
+    display:flex; align-items:center; justify-content:center;
+  }
+
   .multi-field{align-items:flex-start;}
   .multi-field .field-value-wrap{flex-direction:column; align-items:flex-end; gap:6px;}
+  .multi-row{display:flex; align-items:center; gap:8px;}
 
   .dest-list{display:flex; flex-wrap:wrap; gap:5px; direction:ltr; justify-content:flex-start;}
   .dest-tag{
@@ -182,9 +256,16 @@
   }
 
   .benefits{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px;}
-  .benefits li{font-size:12.5px; color:var(--text-mid); line-height:1.55; padding-right:16px; position:relative;}
+  .benefits li{font-size:12.5px; color:var(--text-mid); line-height:1.55; padding-right:16px; position:relative; display:flex; align-items:flex-start; gap:8px;}
   .benefits li::before{
-    content:'✦'; position:absolute; right:0; top:0; font-size:10px; color:var(--gold);
+    content:'✦'; position:absolute; right:0; top:2px; font-size:10px; color:var(--gold);
+  }
+  .benefit-text{flex:1; outline:none;}
+  .benefit-text[contenteditable="true"]{border-bottom:1px dashed var(--gold); cursor:text;}
+  .add-benefit-btn{
+    align-self:flex-start; font-family:var(--mono); font-size:11px; font-weight:700; color:var(--gold);
+    background:var(--gold-pale); border:1px dashed var(--gold); border-radius:20px; padding:5px 12px;
+    cursor:pointer; margin-top:2px;
   }
 
   .section-label{
@@ -195,8 +276,10 @@
   .note{
     font-size:12px; color:var(--navy-mid); background:var(--gold-pale);
     border-right:3px solid var(--gold); border-radius:2px; padding:9px 12px; line-height:1.55;
+    outline:none;
   }
-  .note.warn{color:#7A2E22; background:#FBEAE4; border-right-color:#C4574A;}
+  .note[contenteditable="true"]{border:1px dashed var(--gold); border-right:3px solid var(--gold); cursor:text;}
+  .note.warn{color:#7A2E22; background:#FBEAE4; border-right-color:var(--red);}
   .field-note{
     font-size:11px; color:var(--text-mid); font-style:italic; margin-top:-6px;
   }
@@ -224,6 +307,7 @@
     .search-row{flex-direction:column; align-items:stretch;}
     .stat-pill{text-align:center;}
     #search{padding:12px 40px 12px 14px; font-size:16px;}
+    .stamp{font-size:16px; padding:4px 12px;}
   }
   @media (max-width:360px){
     .field{flex-wrap:wrap;}
@@ -235,7 +319,23 @@
 
 <header>
   <div class="head-inner">
-    <div class="eyebrow"><span class="line"></span>AMSALEM TOURS · חטיבת משרדי ממשלה</div>
+    <div class="eyebrow">
+      <div class="eyebrow-left"><span class="line"></span>AMSALEM TOURS · חטיבת משרדי ממשלה</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="ctrl-btn" id="editModeBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+          <span id="editModeLabel">מצב עריכה</span>
+        </button>
+        <button class="ctrl-btn" id="showInactiveBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>הצג לא פעילים</span>
+        </button>
+        <button class="ctrl-btn" id="resetBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+          איפוס שינויים
+        </button>
+      </div>
+    </div>
     <h1>הסכמי קורפורייט <em>· חברות תעופה</em></h1>
     <div class="search-row">
       <div class="search-wrap">
@@ -258,7 +358,9 @@
 <footer>מסמך פנימי · Amsalem Tours</footer>
 
 <script>
-const DATA = [
+const STORAGE_KEY = 'corp_agreements_overrides_v1';
+
+const BASE_DATA = [
   {
     name: "אל על — במערכת הישראלית",
     codes: ["LY"],
@@ -433,19 +535,119 @@ const DATA = [
   },
 ];
 
+/* stable id per card, based on original order (survives name edits) */
+BASE_DATA.forEach((item, i)=> item.id = 'agr-' + i);
+
+/* ---------- persistence ---------- */
+function loadOverrides(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveOverrides(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides)); }catch(e){}
+}
+let overrides = loadOverrides();
+
+function getOverride(id){
+  if(!overrides[id]) overrides[id] = {};
+  return overrides[id];
+}
+function patchOverride(id, patch){
+  const o = getOverride(id);
+  Object.assign(o, patch);
+  saveOverrides();
+}
+
+/* merge base item with its override into an effective render item (deep-ish clone) */
+function effectiveItem(base){
+  const o = overrides[base.id] || {};
+  const item = JSON.parse(JSON.stringify(base));
+  item.active = o.active !== undefined ? o.active : true;
+  if(o.name !== undefined) item.name = o.name;
+  if(o.note !== undefined) item.note = o.note;
+  if(o.benefits !== undefined) item.benefits = o.benefits;
+  if(o.fields){
+    item.fields.forEach((f, idx)=>{
+      const fo = o.fields[idx];
+      if(!fo) return;
+      if(fo.label !== undefined) f.label = fo.label;
+      if(f.multi){
+        if(fo.multi !== undefined) f.multi = fo.multi;
+      } else {
+        if(fo.value !== undefined) f.value = fo.value;
+      }
+    });
+  }
+  return item;
+}
+
+/* ---------- state ---------- */
+let editMode = false;
+let showInactive = true;
+
 const grid = document.getElementById('grid');
 const search = document.getElementById('search');
 const countEl = document.getElementById('count');
 const emptyEl = document.getElementById('empty');
+const editModeBtn = document.getElementById('editModeBtn');
+const editModeLabel = document.getElementById('editModeLabel');
+const showInactiveBtn = document.getElementById('showInactiveBtn');
+const resetBtn = document.getElementById('resetBtn');
 
+/* ---------- icons ---------- */
 function copySvg(){
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
 }
 function checkSvg(){
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
 }
+function pencilSvg(){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>';
+}
 
-function makeField(f){
+/* ---------- field builders (now id-aware + editable) ---------- */
+function makeCopyBtn(getText){
+  const btn = document.createElement('button');
+  btn.className='copy-btn';
+  btn.innerHTML = copySvg();
+  btn.type='button';
+  btn.setAttribute('aria-label','העתק');
+  btn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    navigator.clipboard.writeText(getText()).then(()=>{
+      btn.innerHTML = checkSvg();
+      btn.classList.add('copied');
+      setTimeout(()=>{ btn.innerHTML = copySvg(); btn.classList.remove('copied'); }, 1300);
+    });
+  });
+  return btn;
+}
+
+function commitFieldValue(id, fieldIdx, value){
+  const o = getOverride(id);
+  if(!o.fields) o.fields = {};
+  if(!o.fields[fieldIdx]) o.fields[fieldIdx] = {};
+  o.fields[fieldIdx].value = value;
+  saveOverrides();
+}
+function commitFieldLabel(id, fieldIdx, label){
+  const o = getOverride(id);
+  if(!o.fields) o.fields = {};
+  if(!o.fields[fieldIdx]) o.fields[fieldIdx] = {};
+  o.fields[fieldIdx].label = label;
+  saveOverrides();
+}
+function commitFieldMulti(id, fieldIdx, arr){
+  const o = getOverride(id);
+  if(!o.fields) o.fields = {};
+  if(!o.fields[fieldIdx]) o.fields[fieldIdx] = {};
+  o.fields[fieldIdx].multi = arr;
+  saveOverrides();
+}
+
+function makeField(f, id, fieldIdx){
   const outer = document.createElement('div');
   outer.style.display='flex'; outer.style.flexDirection='column'; outer.style.gap='4px';
 
@@ -455,27 +657,68 @@ function makeField(f){
   const label = document.createElement('div');
   label.className = 'field-label';
   label.textContent = f.label;
+  label.contentEditable = editMode ? 'true' : 'false';
+  label.addEventListener('blur', ()=> commitFieldLabel(id, fieldIdx, label.textContent.trim()));
   wrap.appendChild(label);
 
   const valWrap = document.createElement('div');
   valWrap.className = 'field-value-wrap';
 
   if(f.multi){
+    const rows = [];
+    function rebuildMulti(){
+      const arr = rows.filter(r=>r.el.isConnected).map(r=> r.val.textContent.trim());
+      commitFieldMulti(id, fieldIdx, arr);
+    }
     f.multi.forEach(v=>{
       const row = document.createElement('div');
-      row.style.display='flex'; row.style.alignItems='center'; row.style.gap='8px';
+      row.className = 'multi-row';
       const val = document.createElement('div');
       val.className='field-value'; val.textContent=v;
-      const btn = makeCopyBtn(v);
-      row.appendChild(val); row.appendChild(btn);
+      val.contentEditable = editMode ? 'true' : 'false';
+      val.addEventListener('blur', rebuildMulti);
+      const btn = makeCopyBtn(()=>val.textContent);
+      row.appendChild(val);
+      row.appendChild(btn);
+      if(editMode){
+        const rm = document.createElement('button');
+        rm.type='button'; rm.className='remove-line-btn'; rm.textContent='×';
+        rm.title='הסר שורה';
+        rm.addEventListener('click', ()=>{ row.remove(); rebuildMulti(); });
+        row.appendChild(rm);
+      }
+      rows.push({el:row, val});
       valWrap.appendChild(row);
     });
+    if(editMode){
+      const addBtn = document.createElement('button');
+      addBtn.type='button'; addBtn.className='add-benefit-btn'; addBtn.textContent='+ הוסף שורה';
+      addBtn.addEventListener('click', ()=>{
+        const row = document.createElement('div');
+        row.className='multi-row';
+        const val = document.createElement('div');
+        val.className='field-value'; val.textContent='';
+        val.contentEditable='true';
+        val.addEventListener('blur', rebuildMulti);
+        const btn = makeCopyBtn(()=>val.textContent);
+        const rm = document.createElement('button');
+        rm.type='button'; rm.className='remove-line-btn'; rm.textContent='×';
+        rm.addEventListener('click', ()=>{ row.remove(); rebuildMulti(); });
+        row.appendChild(val); row.appendChild(btn); row.appendChild(rm);
+        rows.push({el:row, val});
+        valWrap.insertBefore(row, addBtn);
+        val.focus();
+      });
+      valWrap.appendChild(addBtn);
+    }
   } else {
     const val = document.createElement('div');
     val.className = 'field-value';
     val.textContent = f.value;
     val.title = f.value;
-    const btn = makeCopyBtn(f.value);
+    val.contentEditable = editMode ? 'true' : 'false';
+    val.addEventListener('blur', ()=> commitFieldValue(id, fieldIdx, val.textContent.trim()));
+    const btn = makeCopyBtn(()=>val.textContent);
     valWrap.appendChild(val);
     valWrap.appendChild(btn);
   }
@@ -493,34 +736,30 @@ function makeField(f){
   return outer;
 }
 
-function makeCopyBtn(text){
-  const btn = document.createElement('button');
-  btn.className='copy-btn';
-  btn.innerHTML = copySvg();
-  btn.type='button';
-  btn.setAttribute('aria-label','העתק');
-  btn.addEventListener('click', ()=>{
-    navigator.clipboard.writeText(text).then(()=>{
-      btn.innerHTML = checkSvg();
-      btn.classList.add('copied');
-      setTimeout(()=>{ btn.innerHTML = copySvg(); btn.classList.remove('copied'); }, 1300);
-    });
-  });
-  return btn;
-}
+/* ---------- card ---------- */
+function renderCard(base){
+  const item = effectiveItem(base);
+  const id = base.id;
 
-function renderCard(item){
   const card = document.createElement('div');
-  card.className='card';
+  card.className='card' + (item.active ? '' : ' inactive') + (editMode ? ' editing' : '');
+
+  const stamp = document.createElement('div');
+  stamp.className='stamp';
+  stamp.textContent = 'לא בתוקף';
+  card.appendChild(stamp);
 
   const top = document.createElement('div');
   top.className='card-top';
   const head = document.createElement('div');
   head.className='card-head';
+
   const left = document.createElement('div');
   const nameEl = document.createElement('div');
   nameEl.className='airline-name';
   nameEl.textContent = item.name;
+  nameEl.contentEditable = editMode ? 'true' : 'false';
+  nameEl.addEventListener('blur', ()=> patchOverride(id, {name: nameEl.textContent.trim()}));
   const codesEl = document.createElement('div');
   codesEl.className='codes';
   item.codes.forEach(c=>{
@@ -541,12 +780,43 @@ function renderCard(item){
   left.appendChild(nameEl);
   left.appendChild(codesEl);
   head.appendChild(left);
+
+  const right = document.createElement('div');
+  right.className='card-top-right';
+
+  const toggle = document.createElement('div');
+  toggle.className = 'active-toggle' + (item.active ? ' is-active' : '');
+  const sw = document.createElement('div'); sw.className='switch';
+  const twLabel = document.createElement('span'); twLabel.textContent = item.active ? 'פעיל' : 'לא פעיל';
+  toggle.appendChild(twLabel);
+  toggle.appendChild(sw);
+  toggle.addEventListener('click', ()=>{
+    const newActive = !item.active;
+    patchOverride(id, {active: newActive});
+    render();
+  });
+  right.appendChild(toggle);
+
   if(item.noFee){
     const b = document.createElement('span');
     b.className='nofee-badge';
     b.textContent='ללא עמלה';
-    head.appendChild(b);
+    right.appendChild(b);
   }
+
+  const editBtn = document.createElement('button');
+  editBtn.type='button';
+  editBtn.className='edit-btn' + (editMode ? ' on' : '');
+  editBtn.innerHTML = pencilSvg();
+  editBtn.title = 'מצב עריכה';
+  editBtn.addEventListener('click', ()=>{
+    editMode = !editMode;
+    syncEditModeBtn();
+    render();
+  });
+  right.appendChild(editBtn);
+
+  head.appendChild(right);
   top.appendChild(head);
   card.appendChild(top);
 
@@ -557,7 +827,7 @@ function renderCard(item){
   const body = document.createElement('div');
   body.className='card-body';
 
-  item.fields.forEach(f=> body.appendChild(makeField(f)));
+  item.fields.forEach((f, idx)=> body.appendChild(makeField(f, id, idx)));
 
   if(item.destinations){
     const lbl = document.createElement('div');
@@ -575,25 +845,69 @@ function renderCard(item){
     body.appendChild(destWrap);
   }
 
-  if(item.benefits && item.benefits.length){
+  if((item.benefits && item.benefits.length) || editMode){
     const lbl = document.createElement('div');
     lbl.className='section-label';
     lbl.textContent = 'הטבות הסכם';
     body.appendChild(lbl);
     const ul = document.createElement('ul');
     ul.className='benefits';
+
+    function rebuildBenefits(){
+      const texts = Array.from(ul.querySelectorAll('.benefit-text')).map(el=>el.textContent.trim());
+      patchOverride(id, {benefits: texts});
+    }
+
     item.benefits.forEach(b=>{
       const li = document.createElement('li');
-      li.textContent = b;
+      const span = document.createElement('span');
+      span.className='benefit-text';
+      span.textContent = b;
+      span.contentEditable = editMode ? 'true' : 'false';
+      span.addEventListener('blur', rebuildBenefits);
+      li.appendChild(span);
+      if(editMode){
+        const rm = document.createElement('button');
+        rm.type='button'; rm.className='remove-line-btn'; rm.textContent='×';
+        rm.title='הסר הטבה';
+        rm.addEventListener('click', ()=>{ li.remove(); rebuildBenefits(); });
+        li.appendChild(rm);
+      }
       ul.appendChild(li);
     });
     body.appendChild(ul);
+
+    if(editMode){
+      const addBtn = document.createElement('button');
+      addBtn.type='button'; addBtn.className='add-benefit-btn'; addBtn.textContent='+ הוסף הטבה';
+      addBtn.addEventListener('click', ()=>{
+        const li = document.createElement('li');
+        const span = document.createElement('span');
+        span.className='benefit-text'; span.textContent=''; span.contentEditable='true';
+        span.addEventListener('blur', rebuildBenefits);
+        const rm = document.createElement('button');
+        rm.type='button'; rm.className='remove-line-btn'; rm.textContent='×';
+        rm.addEventListener('click', ()=>{ li.remove(); rebuildBenefits(); });
+        li.appendChild(span); li.appendChild(rm);
+        ul.appendChild(li);
+        span.focus();
+      });
+      body.appendChild(addBtn);
+    }
   }
 
-  if(item.note){
+  if(item.note || editMode){
     const n = document.createElement('div');
     n.className = 'note' + (item.warn ? ' warn' : '');
-    n.textContent = item.note;
+    n.textContent = item.note || '';
+    n.contentEditable = editMode ? 'true' : 'false';
+    if(editMode && !item.note){ n.dataset.placeholder = '1'; n.style.opacity='0.5'; n.textContent='(הוסף הערה)'; }
+    n.addEventListener('focus', ()=>{ if(n.dataset.placeholder){ n.textContent=''; n.style.opacity='1'; delete n.dataset.placeholder; } });
+    n.addEventListener('blur', ()=>{
+      const val = n.textContent.trim();
+      patchOverride(id, {note: val});
+      if(!val && editMode){ n.dataset.placeholder='1'; n.style.opacity='0.5'; n.textContent='(הוסף הערה)'; }
+    });
     body.appendChild(n);
   }
 
@@ -601,7 +915,8 @@ function renderCard(item){
   return card;
 }
 
-function normalize(s){ return s.toLowerCase(); }
+/* ---------- search / filter ---------- */
+function normalize(s){ return (s||'').toLowerCase(); }
 
 function matches(item, q){
   if(!q) return true;
@@ -620,13 +935,47 @@ function matches(item, q){
 function render(){
   const q = search.value.trim();
   grid.innerHTML = '';
-  const filtered = DATA.filter(item=>matches(item,q));
-  filtered.forEach(item=> grid.appendChild(renderCard(item)));
-  countEl.textContent = filtered.length;
-  emptyEl.classList.toggle('show', filtered.length===0);
+  const list = BASE_DATA
+    .map(effectiveItem)
+    .filter(item=> showInactive || item.active)
+    .filter(item=> matches(item, q));
+
+  list.forEach(item=>{
+    const base = BASE_DATA.find(b=>b.id===item.id);
+    grid.appendChild(renderCard(base));
+  });
+  countEl.textContent = list.length;
+  emptyEl.classList.toggle('show', list.length===0);
 }
 
+/* ---------- top controls ---------- */
+function syncEditModeBtn(){
+  editModeBtn.classList.toggle('on', editMode);
+  editModeLabel.textContent = editMode ? 'סיום עריכה' : 'מצב עריכה';
+}
+editModeBtn.addEventListener('click', ()=>{
+  editMode = !editMode;
+  syncEditModeBtn();
+  render();
+});
+
+showInactiveBtn.classList.add('on');
+showInactiveBtn.addEventListener('click', ()=>{
+  showInactive = !showInactive;
+  showInactiveBtn.classList.toggle('on', showInactive);
+  render();
+});
+
+resetBtn.addEventListener('click', ()=>{
+  if(confirm('לאפס את כל השינויים והסימונים שבוצעו ולחזור לברירת המחדל?')){
+    overrides = {};
+    saveOverrides();
+    render();
+  }
+});
+
 search.addEventListener('input', render);
+syncEditModeBtn();
 render();
 </script>
 </body>
