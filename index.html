@@ -288,6 +288,43 @@
   .empty-state.show{display:block;}
   .empty-state svg{margin-bottom:14px; opacity:.35;}
 
+  /* password modal */
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(12,27,46,0.62); backdrop-filter:blur(2px);
+    display:none; align-items:center; justify-content:center; z-index:100; padding:20px;
+  }
+  .modal-backdrop.show{display:flex;}
+  .modal-box{
+    background:var(--card); border-radius:6px; padding:26px 26px 22px; width:100%; max-width:340px;
+    box-shadow:0 20px 60px -12px rgba(12,27,46,0.5); border:1px solid var(--line);
+    animation:modalIn .15s ease-out;
+  }
+  @keyframes modalIn{ from{opacity:0; transform:translateY(6px) scale(.98);} to{opacity:1; transform:none;} }
+  .modal-box h3{
+    margin:0 0 6px; font-family:var(--serif); font-size:18px; color:var(--navy-deep); font-weight:700;
+    display:flex; align-items:center; gap:8px;
+  }
+  .modal-box p{margin:0 0 16px; font-size:12.5px; color:var(--text-mid); line-height:1.5;}
+  .modal-box input{
+    width:100%; padding:11px 14px; border:1px solid var(--line); border-radius:3px; font-family:var(--mono);
+    font-size:14px; color:var(--navy-deep); outline:none; background:var(--bg); direction:ltr; text-align:left;
+  }
+  .modal-box input:focus{border-color:var(--gold); box-shadow:0 0 0 2px var(--gold-pale);}
+  .modal-error{
+    font-size:11.5px; color:var(--red); margin-top:8px; min-height:14px; font-weight:600;
+  }
+  .modal-actions{display:flex; gap:10px; margin-top:16px;}
+  .modal-actions button{
+    flex:1; padding:10px; border-radius:3px; font-family:var(--sans); font-weight:700; font-size:13px;
+    cursor:pointer; border:1px solid var(--line); background:var(--bg); color:var(--text-mid);
+  }
+  .modal-actions button.primary{background:var(--navy); color:#FBF7EE; border-color:var(--navy);}
+  .modal-actions button.primary:hover{background:var(--navy-deep);}
+  .lock-pill{
+    display:flex; align-items:center; gap:5px;
+  }
+  .lock-pill svg{width:11px; height:11px;}
+
   footer{
     max-width:1180px; margin:44px auto 0; padding:18px 24px 0; border-top:1px solid var(--line);
     font-family:var(--mono); font-size:10.5px; color:var(--text-low); text-align:center; letter-spacing:.05em;
@@ -323,7 +360,7 @@
       <div class="eyebrow-left"><span class="line"></span>AMSALEM TOURS · חטיבת משרדי ממשלה</div>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
         <button class="ctrl-btn" id="editModeBtn" type="button">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+          <svg id="editModeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
           <span id="editModeLabel">מצב עריכה</span>
         </button>
         <button class="ctrl-btn" id="showInactiveBtn" type="button">
@@ -356,6 +393,19 @@
 </main>
 
 <footer>מסמך פנימי · Amsalem Tours</footer>
+
+<div class="modal-backdrop" id="pwModal">
+  <div class="modal-box">
+    <h3><span class="lock-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span> נדרשת סיסמה</h3>
+    <p>פעולה זו (עריכת נתונים / שינוי סטטוס פעיל) דורשת סיסמת הרשאה.</p>
+    <input type="password" id="pwInput" placeholder="סיסמה" autocomplete="off">
+    <div class="modal-error" id="pwError"></div>
+    <div class="modal-actions">
+      <button type="button" id="pwCancel">ביטול</button>
+      <button type="button" id="pwConfirm" class="primary">אישור</button>
+    </div>
+  </div>
+</div>
 
 <script>
 const STORAGE_KEY = 'corp_agreements_overrides_v1';
@@ -587,6 +637,50 @@ function effectiveItem(base){
 let editMode = false;
 let showInactive = true;
 
+/* ---------- password gate ---------- */
+const GATE_PASSWORD = 'Amsalem2026!';
+let unlocked = sessionStorage.getItem('corp_unlocked') === '1';
+let pendingAction = null;
+
+const pwModal = document.getElementById('pwModal');
+const pwInput = document.getElementById('pwInput');
+const pwError = document.getElementById('pwError');
+const pwCancel = document.getElementById('pwCancel');
+const pwConfirm = document.getElementById('pwConfirm');
+
+function requireAuth(action){
+  if(unlocked){ action(); return; }
+  pendingAction = action;
+  pwError.textContent = '';
+  pwInput.value = '';
+  pwModal.classList.add('show');
+  setTimeout(()=> pwInput.focus(), 30);
+}
+function closeModal(){
+  pwModal.classList.remove('show');
+  pendingAction = null;
+}
+function attemptUnlock(){
+  if(pwInput.value === GATE_PASSWORD){
+    unlocked = true;
+    sessionStorage.setItem('corp_unlocked','1');
+    const action = pendingAction;
+    closeModal();
+    if(action) action();
+  } else {
+    pwError.textContent = 'סיסמה שגויה';
+    pwInput.value = '';
+    pwInput.focus();
+  }
+}
+pwConfirm.addEventListener('click', attemptUnlock);
+pwCancel.addEventListener('click', closeModal);
+pwInput.addEventListener('keydown', (e)=>{
+  if(e.key==='Enter') attemptUnlock();
+  if(e.key==='Escape') closeModal();
+});
+pwModal.addEventListener('click', (e)=>{ if(e.target===pwModal) closeModal(); });
+
 const grid = document.getElementById('grid');
 const search = document.getElementById('search');
 const countEl = document.getElementById('count');
@@ -791,9 +885,11 @@ function renderCard(base){
   toggle.appendChild(twLabel);
   toggle.appendChild(sw);
   toggle.addEventListener('click', ()=>{
-    const newActive = !item.active;
-    patchOverride(id, {active: newActive});
-    render();
+    requireAuth(()=>{
+      const newActive = !item.active;
+      patchOverride(id, {active: newActive});
+      render();
+    });
   });
   right.appendChild(toggle);
 
@@ -810,9 +906,17 @@ function renderCard(base){
   editBtn.innerHTML = pencilSvg();
   editBtn.title = 'מצב עריכה';
   editBtn.addEventListener('click', ()=>{
-    editMode = !editMode;
-    syncEditModeBtn();
-    render();
+    if(editMode){
+      editMode = false;
+      syncEditModeBtn();
+      render();
+    } else {
+      requireAuth(()=>{
+        editMode = true;
+        syncEditModeBtn();
+        render();
+      });
+    }
   });
   right.appendChild(editBtn);
 
@@ -954,9 +1058,17 @@ function syncEditModeBtn(){
   editModeLabel.textContent = editMode ? 'סיום עריכה' : 'מצב עריכה';
 }
 editModeBtn.addEventListener('click', ()=>{
-  editMode = !editMode;
-  syncEditModeBtn();
-  render();
+  if(editMode){
+    editMode = false;
+    syncEditModeBtn();
+    render();
+  } else {
+    requireAuth(()=>{
+      editMode = true;
+      syncEditModeBtn();
+      render();
+    });
+  }
 });
 
 showInactiveBtn.classList.add('on');
