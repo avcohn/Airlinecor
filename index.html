@@ -3,219 +3,354 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10233A">
 <title>הסכמי קורפורייט ממשלה</title>
+<script>
+/* החלת מצב התצוגה שנשמר לפני הציור — מונע הבהוב */
+try{var u=JSON.parse(localStorage.getItem('corp_agreements_ui_v1')||'{}');if(u&&(u.theme==='dark'||u.theme==='light'))document.documentElement.setAttribute('data-theme',u.theme);}catch(e){}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Rubik:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Hebrew:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* =====================================================================
+   צבעים — מצב רך (ברירת מחדל)
+   ===================================================================== */
 :root{
-  --bg:#F3F5F7;
-  --surface:#FFFFFF;
-  --surface-soft:#F8FAFC;
-  --navy:#17324F;
-  --navy-deep:#0B2036;
-  --navy-mid:#34516E;
-  --gold:#B88A43;
-  --gold-soft:#F4E9D7;
-  --gold-pale:#FBF6ED;
-  --line:#DEE5EC;
-  --line-strong:#CBD5DF;
-  --text:#16283A;
-  --muted:#637487;
-  --subtle:#96A4B2;
-  --red:#B8473D;
-  --red-soft:#FFF0ED;
-  --green:#2F7752;
-  --green-soft:#EAF6EF;
-  --shadow:0 10px 30px rgba(18,42,67,.08);
-  --shadow-hover:0 18px 42px rgba(18,42,67,.13);
+  color-scheme:light;
+  --bg:#E2E6EA;
+  --card:#F3F4F1;
+  --field:#E8EBEA;
+  --field-line:#D9DFE2;
+  --field-hover:#DCE3E8;
+  --line:#CFD6DC;
+  --line-strong:#B9C3CC;
+  --text:#1C2B3A;
+  --text-2:#384858;
+  --muted:#5A6978;
+  --subtle:#8794A1;
+  --code:#13283D;
+  --accent:#1F3D5B;
+  --accent-ink:#FFFFFF;
+  --accent-hover:#15304A;
+  --gold:#A9824A;
+  --gold-ink:#7E5D2B;
+  --gold-pale:#EEE6D6;
+  --green:#3A7855;
+  --green-soft:#D7E9DD;
+  --red:#A84A40;
+  --hero-1:#10233A;
+  --hero-2:#1D3B58;
+  --top-1:#1F3C59;
+  --top-2:#152B42;
+  --bar-bg:rgba(226,230,234,.86);
+  --chip:#EEF0ED;
+  --note-bg:#ECE4D3;
+  --note-line:#D8C6A2;
+  --note-text:#47433A;
+  --warn-bg:#F0DED9;
+  --warn-line:#DFB9B2;
+  --warn-text:#77342E;
+  --edit-bg:#F4EBD9;
+  --toast:#10233A;
+  --k-price:#8E6A2C;  --k-price-bg:#E8DDC6;
+  --k-pay:#357050;    --k-pay-bg:#D3E6D9;
+  --k-code:#3A6690;   --k-code-bg:#D6E2EE;
+  --k-remark:#585D92; --k-remark-bg:#DDDEEE;
+  --k-other:#5A6978;  --k-other-bg:#DFE4E8;
+  --shadow:0 1px 2px rgba(16,36,56,.05),0 8px 22px rgba(16,36,56,.07);
+  --shadow-hover:0 2px 4px rgba(16,36,56,.06),0 14px 34px rgba(16,36,56,.11);
+  --wm:#1F3D5B;
+  --wm-op:.11;
+  --wm-fill:var(--bg);
   --radius:16px;
-  --serif:'Rubik', sans-serif;
-  --sans:'Heebo', sans-serif;
-  --mono:'JetBrains Mono', monospace;
+  --sans:'IBM Plex Sans Hebrew','Assistant','Segoe UI',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
 }
+
+/* מצב כהה — לפי הגדרת המערכת, אלא אם נבחר אחרת */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#131A22; --card:#1A242F; --field:#202C38; --field-line:#2A3744; --field-hover:#283644;
+    --line:#2A3643; --line-strong:#3A4858;
+    --text:#DCE3EA; --text-2:#C1CBD5; --muted:#97A6B5; --subtle:#6D7E8F; --code:#EAF0F5;
+    --accent:#C9A66C; --accent-ink:#141F2A; --accent-hover:#D6B784;
+    --gold:#C9A66C; --gold-ink:#D6B783; --gold-pale:#2A2A24;
+    --green:#5DAE80; --green-soft:#1C3127; --red:#DC7B6F;
+    --hero-1:#0B131C; --hero-2:#172A3D; --top-1:#21374D; --top-2:#1A2C3F;
+    --bar-bg:rgba(19,26,34,.86); --chip:#1D2832;
+    --note-bg:#25251F; --note-line:#463E2D; --note-text:#D3CAB7;
+    --warn-bg:#2E1E1D; --warn-line:#56302B; --warn-text:#EDB2A9;
+    --edit-bg:#2D2A20; --toast:#2B3A4A;
+    --k-price:#D9B77C;  --k-price-bg:#363024;
+    --k-pay:#7CC69C;    --k-pay-bg:#1D3328;
+    --k-code:#8FB6DB;   --k-code-bg:#1E3045;
+    --k-remark:#A9B0E0; --k-remark-bg:#252A44;
+    --k-other:#A3B1BF;  --k-other-bg:#26323E;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 22px rgba(0,0,0,.22);
+    --shadow-hover:0 2px 4px rgba(0,0,0,.3),0 14px 34px rgba(0,0,0,.32);
+    --wm:#9DB3C8; --wm-op:.07;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#131A22; --card:#1A242F; --field:#202C38; --field-line:#2A3744; --field-hover:#283644;
+  --line:#2A3643; --line-strong:#3A4858;
+  --text:#DCE3EA; --text-2:#C1CBD5; --muted:#97A6B5; --subtle:#6D7E8F; --code:#EAF0F5;
+  --accent:#C9A66C; --accent-ink:#141F2A; --accent-hover:#D6B784;
+  --gold:#C9A66C; --gold-ink:#D6B783; --gold-pale:#2A2A24;
+  --green:#5DAE80; --green-soft:#1C3127; --red:#DC7B6F;
+  --hero-1:#0B131C; --hero-2:#172A3D; --top-1:#21374D; --top-2:#1A2C3F;
+  --bar-bg:rgba(19,26,34,.86); --chip:#1D2832;
+  --note-bg:#25251F; --note-line:#463E2D; --note-text:#D3CAB7;
+  --warn-bg:#2E1E1D; --warn-line:#56302B; --warn-text:#EDB2A9;
+  --edit-bg:#2D2A20; --toast:#2B3A4A;
+  --k-price:#D9B77C;  --k-price-bg:#363024;
+  --k-pay:#7CC69C;    --k-pay-bg:#1D3328;
+  --k-code:#8FB6DB;   --k-code-bg:#1E3045;
+  --k-remark:#A9B0E0; --k-remark-bg:#252A44;
+  --k-other:#A3B1BF;  --k-other-bg:#26323E;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 22px rgba(0,0,0,.22);
+  --shadow-hover:0 2px 4px rgba(0,0,0,.3),0 14px 34px rgba(0,0,0,.32);
+  --wm:#9DB3C8; --wm-op:.07;
+}
+
+/* =====================================================================
+   בסיס
+   ===================================================================== */
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth}
-body{margin:0;background:linear-gradient(180deg,#F8FAFC 0%,#F2F5F8 100%);color:var(--text);font-family:var(--sans);min-height:100vh;padding-bottom:64px;position:relative;isolation:isolate}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.55;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%201600%201200%27%3E%0A%20%20%3Cg%20fill%3D%27none%27%20stroke%3D%27%2317324F%27%20stroke-width%3D%277%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20opacity%3D%270.13%27%3E%0A%20%20%20%20%3Cpath%20d%3D%27M110%20955h1380%27%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%27M210%20955V805h165v150%27%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%27M420%20955V700h195v255%27%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%27M665%20955V635h255v320%27%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%27M980%20955V740h190v215%27%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%27M1230%20955V820h140v135%27%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%27M255%20848h75m-75-34h75m-75-34h75%27%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%27M470%20840h95m-95-36h95m-95-36h95m-95-36h95%27%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%27M725%20880h135m-135-42h135m-135-42h135m-135-42h135m-135-42h135%27%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%27M1030%20850h90m-90-34h90m-90-34h90%27%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%27M1268%20870h64m-64-30h64%27%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%27M610%20955l88-105h160l82%20105%27%2F%3E%0A%20%20%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%27none%27%20stroke%3D%27%2317324F%27%20stroke-width%3D%275%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20opacity%3D%270.14%27%3E%0A%20%20%20%20%3Cpath%20d%3D%27M1135%20195l114%2020%20135-49%2025%2012-121%2074%2082%2073-25%2012-134-49-114%2020%2046-63z%27%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%27M265%20295l94%2016%20110-40%2021%2010-99%2061%2067%2060-21%2010-109-39-94%2016%2038-51z%27%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%27M1220%20500l74%2013%2088-32%2017%208-80%2049%2055%2050-17%208-88-32-74%2013%2030-42z%27%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E");background-repeat:no-repeat;background-position:center 110px;background-size:min(1380px,96vw) auto}
-header,.airline-bar,main,footer{position:relative;z-index:1}
-::selection{background:#ECD9B8;color:var(--navy-deep)}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{margin:0;min-height:100vh;padding-bottom:56px;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;position:relative;isolation:isolate;transition:background-color .2s ease,color .2s ease}
+header,main,footer{position:relative;z-index:1}
+::selection{background:#E3CFA7;color:#10233A}
 button,input{font:inherit;color:inherit}
 button{touch-action:manipulation}
-:focus-visible{outline:3px solid rgba(184,138,67,.38);outline-offset:2px}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
-/* ===== Hero ===== */
-header{position:relative;overflow:hidden;background:linear-gradient(135deg,#0B2036 0%,#173A5D 72%,#1D486E 100%);padding:24px 24px 28px;color:#fff}
-header::before{content:'';position:absolute;inset:auto auto -140px -90px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(184,138,67,.22),transparent 67%);pointer-events:none}
-.head-inner{max-width:1240px;margin:0 auto;position:relative}
-.eyebrow{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:15px;color:#DFC797;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
-.eyebrow-left{display:flex;align-items:center;gap:9px}
-.eyebrow .line{width:28px;height:1px;background:#DFC797;opacity:.65}
-.head-controls{display:flex;gap:8px;flex-wrap:wrap}
-.title-row{display:flex;align-items:flex-end;justify-content:space-between;gap:14px 24px;flex-wrap:wrap}
-h1{margin:0;font-family:var(--serif);font-size:clamp(28px,4vw,40px);font-weight:700;line-height:1.12;letter-spacing:-.01em}
-h1 em{font-style:normal;color:#DFC797;font-weight:400}
-.stat-pill{display:flex;align-items:center;gap:5px;padding:8px 13px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.07);font-size:12px;color:#D9E1E8;backdrop-filter:blur(8px)}
-.stat-pill b{font-family:var(--mono);color:#fff}
-.ctrl-btn{display:inline-flex;align-items:center;gap:7px;min-height:34px;padding:6px 11px;border:1px solid rgba(255,255,255,.18);border-radius:9px;background:rgba(255,255,255,.06);color:#E9D7B4;font-size:11px;font-weight:700;cursor:pointer;transition:.16s ease}
-.ctrl-btn svg{width:14px;height:14px}
-.ctrl-btn:hover{background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.28)}
-.ctrl-btn.on{background:#E6C993;color:#0B2036;border-color:#E6C993}
+/* סימן מים — שדה תעופה ומטוסים */
+.watermark{position:fixed;left:0;right:0;bottom:0;z-index:0;width:100%;height:min(43.75vw,70vh);color:var(--wm);opacity:var(--wm-op);pointer-events:none;transition:opacity .2s ease}
 
-/* ===== Sticky workbench ===== */
-.airline-bar{position:sticky;top:0;z-index:30;background:rgba(247,249,251,.90);backdrop-filter:blur(16px) saturate(1.2);border-bottom:1px solid var(--line);box-shadow:0 8px 30px rgba(12,32,54,.06)}
-.bar-inner{max-width:1240px;margin:0 auto;padding:14px 24px 13px;display:flex;gap:7px;overflow-x:auto;scrollbar-width:none}
-.bar-inner::-webkit-scrollbar{display:none}
-.chip{--ring:#fff;display:inline-flex;align-items:center;gap:8px;flex:none;min-height:38px;padding:4px 12px 4px 5px;background:#fff;border:1px solid var(--line);border-radius:999px;color:var(--navy);font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap;transition:.16s ease}
-.chip:hover{border-color:#C6A768;transform:translateY(-1px)}
-.chip.on{--ring:var(--navy);background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 4px 12px rgba(23,50,79,.18)}
-.chip.inactive{opacity:.48;filter:grayscale(.85)}
+/* =====================================================================
+   כותרת עליונה
+   ===================================================================== */
+header{overflow:hidden;padding:22px 24px 24px;background:linear-gradient(135deg,var(--hero-1) 0%,var(--hero-2) 100%);color:#fff}
+header::before{content:'';position:absolute;inset:auto auto -170px -110px;width:460px;height:460px;border-radius:50%;background:radial-gradient(circle,rgba(201,166,108,.18),transparent 66%);pointer-events:none}
+header::after{content:'';position:absolute;inset:auto 0 0 0;height:1px;background:linear-gradient(90deg,transparent,rgba(217,187,127,.5),transparent)}
+.head-inner{position:relative;max-width:1240px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:16px 28px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.mark{flex:none;width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(217,187,127,.35);color:#DCC08A}
+.mark svg{width:24px;height:24px}
+.eyebrow{margin-bottom:3px;color:#C9B184;font-size:11.5px;font-weight:500;letter-spacing:.09em}
+h1{margin:0;font-size:clamp(22px,2.9vw,30px);font-weight:600;line-height:1.2}
+h1 em{font-style:normal;font-weight:300;color:#DCC08A;white-space:nowrap}
+.head-side{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.stat-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.06);color:#C9D4DE;font-size:12.5px}
+.stat-pill b{font:600 12.5px var(--mono);color:#fff}
+.head-controls{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px}
+.ctrl-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:34px;padding:6px 12px;border:1px solid rgba(255,255,255,.15);border-radius:10px;background:rgba(255,255,255,.05);color:#E2D2B2;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s}
+.ctrl-btn svg{width:15px;height:15px;flex:none}
+.ctrl-btn:hover{background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.26)}
+
+/* =====================================================================
+   סרגל בחירת הסכם
+   ===================================================================== */
+.airline-bar{position:sticky;top:0;z-index:30;background:var(--bar-bg);-webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15);border-bottom:1px solid var(--line)}
+.bar-inner{max-width:1240px;margin:0 auto;padding:12px 24px;display:flex;flex-wrap:wrap;gap:7px}
+.chip{--ring:var(--chip);display:inline-flex;align-items:center;gap:8px;flex:none;min-height:36px;padding-block:3px;padding-inline:3px 13px;background:var(--chip);border:1px solid var(--line);border-radius:999px;color:var(--text);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s,color .15s}
+.chip:hover{border-color:var(--gold)}
+.chip.on{--ring:var(--accent);background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.chip.inactive{opacity:.55}
 .chip.inactive .chip-label{text-decoration:line-through;text-decoration-color:var(--red)}
 .bubbles{display:flex;align-items:center;direction:ltr}
-.bubble{width:29px;height:29px;border-radius:50%;flex:none;background:#fff;display:grid;place-items:center;overflow:hidden;box-shadow:0 0 0 2px var(--ring);font:800 9px var(--mono);color:var(--navy-deep)}
+.bubble{width:28px;height:28px;border-radius:50%;flex:none;background:#fff;display:grid;place-items:center;overflow:hidden;box-shadow:0 0 0 2px var(--ring);font:600 9px var(--mono);color:#10233A}
 .bubble+.bubble{margin-left:-8px}
 .bubble img{width:78%;height:78%;object-fit:contain;display:block}
-.bubble-more{background:var(--gold-soft);font-size:9px}
-.bubble-all{background:#F1F5F8;color:var(--navy)}
+.bubble-more{background:#EADFC8}
+.bubble-all{background:var(--field);color:var(--text)}
 .bubble-all svg{width:14px;height:14px}
-.chip.on .bubble-all{background:#D9B978;color:#0B2036}
-.chip-count{padding:1px 7px;border-radius:999px;background:#EFF3F6;color:var(--muted);font:700 10px var(--mono)}
-.chip.on .chip-count{background:rgba(255,255,255,.14);color:#E8D3AA}
+.chip.on .bubble-all{background:var(--accent-ink);color:var(--accent)}
+.chip-count{padding:0 7px;border-radius:999px;background:var(--field);color:var(--muted);font:600 11px/18px var(--mono)}
+.chip.on .chip-count{background:transparent;box-shadow:inset 0 0 0 1px currentColor;color:inherit;opacity:.85}
+/* הסכמים שלא בתוקף — מקובצים בסוף השורה */
+.chip-sep{flex:none;align-self:center;width:1px;height:22px;margin-inline:4px;background:var(--line-strong)}
+.chip-archive{background:transparent;border-style:dashed;color:var(--muted)}
+.chip-archive .bubble-all{box-shadow:none}
+.chip-archive.open{background:var(--field);border-style:solid;color:var(--text)}
+.chev{display:grid;place-items:center;margin-inline-start:-2px;transition:transform .18s ease}
+.chev svg{width:14px;height:14px}
+.chip-archive.open .chev{transform:rotate(180deg)}
+.grid-divider{grid-column:1/-1;display:flex;align-items:center;gap:8px;margin-top:10px;color:var(--muted);font-size:13px;font-weight:600}
+.grid-divider svg{width:16px;height:16px}
+.grid-divider::after{content:'';flex:1;height:1px;background:var(--line-strong)}
 
-/* ===== Layout ===== */
-main{max-width:1240px;margin:0 auto;padding:24px 24px 0}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(410px,1fr));gap:18px;align-items:start}
-.grid.single{grid-template-columns:minmax(0,760px);justify-content:center}
+/* =====================================================================
+   פריסה
+   ===================================================================== */
+main{max-width:1240px;margin:0 auto;padding:22px 24px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,430px),1fr));gap:18px;align-items:start}
+.grid.single{grid-template-columns:minmax(0,780px);justify-content:center}
 
-/* ===== Agreement card ===== */
-.card{position:relative;overflow:hidden;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);transition:transform .18s ease,box-shadow .18s ease,opacity .18s ease}
-.card:not(.inactive):hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
-.card.editing{border-color:#C8A25D;box-shadow:0 0 0 3px rgba(184,138,67,.13),var(--shadow)}
-.card.inactive{opacity:.58;filter:saturate(.35)}
-.card-top{padding:18px 18px 16px;background:linear-gradient(140deg,#153654,#0D263E);color:#fff}
-.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
-.card-title{min-width:0;flex:1}
-.airline-name{margin:0;font-family:var(--serif);font-size:18.5px;font-weight:700;line-height:1.3;color:#fff}
-.codes{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;direction:ltr;justify-content:flex-start}
-.code-chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 3px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);font:700 10.5px var(--mono);color:#F3E1BD}
-.code-logo{width:21px;height:21px;border-radius:50%;background:#fff;object-fit:contain;padding:2px;display:block}
+/* =====================================================================
+   כרטיס הסכם
+   ===================================================================== */
+.card{position:relative;display:flex;flex-direction:column;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);transition:box-shadow .18s ease,opacity .18s ease,border-color .18s ease}
+.card:not(.inactive):hover{box-shadow:var(--shadow-hover)}
+.card.editing{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,166,108,.22),var(--shadow)}
+.card.inactive{opacity:.62;filter:saturate(.3)}
+
+.card-top{padding:16px 18px 14px;background:linear-gradient(140deg,var(--top-1),var(--top-2));border-bottom:1px solid rgba(201,166,108,.45);color:#fff}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.card-title{flex:1;min-width:0}
+.airline-name{margin:0;font-size:18px;font-weight:600;line-height:1.35;color:#fff}
+.card-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px}
+.code-chip{direction:ltr;display:inline-flex;align-items:center;gap:6px;padding:2px 9px 2px 3px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);font:600 11px var(--mono);color:#F0DDB6}
+.code-logo{width:20px;height:20px;border-radius:50%;background:#fff;object-fit:contain;padding:2px;display:block}
 .code-logo.hidden{display:none}
-.card-top-right{display:flex;align-items:flex-end;flex-direction:column;gap:9px;flex:none}
-.active-toggle{display:flex;align-items:center;gap:7px;padding:0;border:0;background:transparent;color:#DDE6EE;font:700 10px var(--mono);cursor:pointer}
-.switch{position:relative;width:34px;height:19px;border-radius:999px;background:#9E4541;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);transition:.16s ease}
-.switch::after{content:'';position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:.16s ease}
-.active-toggle.is-active .switch{background:#3C825D}
-.active-toggle.is-active .switch::after{transform:translateX(15px)}
-.nofee-badge{padding:4px 8px;border-radius:7px;background:#DABA7A;color:#10283F;font:800 9px var(--mono);letter-spacing:.03em}
-.edit-btn{width:30px;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#E7D5B2;cursor:pointer;display:grid;place-items:center;transition:.16s ease}
-.edit-btn:hover,.edit-btn.on{background:#DABA7A;color:#0B2036;border-color:#DABA7A}
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:600;line-height:20px}
+.badge-gold{background:#D9BB7F;color:#13263A}
+.badge-red{background:rgba(220,123,111,.18);border:1px solid rgba(220,123,111,.5);color:#FFC9C0}
+.card-tools{display:flex;align-items:center;gap:7px;flex:none}
+.active-toggle{display:inline-flex;align-items:center;gap:8px;height:30px;padding:0 10px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.05);color:#DCE5EE;font-size:12px;font-weight:500;cursor:pointer;transition:background .15s}
+.active-toggle:hover{background:rgba(255,255,255,.1)}
+.switch{position:relative;width:30px;height:17px;border-radius:999px;background:#9A4A44;transition:background .16s}
+.switch::after{content:'';position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .16s}
+.active-toggle.is-active .switch{background:#3F8A61}
+.active-toggle.is-active .switch::after{transform:translateX(13px)}
+.edit-btn{width:30px;height:30px;border:1px solid rgba(255,255,255,.14);border-radius:9px;background:rgba(255,255,255,.05);color:#E2D2B2;display:grid;place-items:center;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
 .edit-btn svg{width:13px;height:13px}
-.perf{display:none}
-.stamp{position:absolute;top:61px;left:50%;transform:translateX(-50%) rotate(-8deg);z-index:5;display:none;padding:5px 12px;border:2px solid var(--red);border-radius:7px;background:rgba(255,240,237,.94);color:var(--red);font:800 14px var(--mono);letter-spacing:.08em;pointer-events:none}
-.card.inactive .stamp{display:block}
+.edit-btn:hover,.edit-btn.on{background:#D9BB7F;border-color:#D9BB7F;color:#13263A}
 
-.card-body{display:flex;flex-direction:column;gap:14px;padding:16px 18px 18px;flex:1}
-.card-actions{display:flex;align-items:center;gap:8px;padding-bottom:2px}
-.copy-all-btn{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:7px 11px;border:1px solid #D6DEE6;border-radius:9px;background:#F8FAFC;color:var(--navy);font-size:11.5px;font-weight:800;cursor:pointer;transition:.16s ease}
-.copy-all-btn svg{width:14px;height:14px}
-.copy-all-btn:hover{border-color:#BE9A59;background:var(--gold-pale)}
-.copy-all-btn.copied{background:var(--green-soft);border-color:#BBDDC9;color:var(--green)}
-.action-hint{font-size:10.5px;color:var(--subtle)}
-.fields{display:flex;flex-direction:column;gap:8px}
-.field-block{padding:11px 12px;border:1px solid #E4E9EE;border-radius:11px;background:var(--surface-soft);display:flex;flex-direction:column;gap:5px}
-.field-block+.field-block{border-top:1px solid #E4E9EE}
-.field{display:flex;align-items:flex-start;gap:14px;justify-content:space-between}
-.field-label{flex:0 0 36%;padding-top:5px;color:var(--muted);font-size:11px;font-weight:800;line-height:1.3}
-.values{display:flex;flex:1;min-width:0;flex-direction:column;align-items:stretch;gap:6px}
-.value-row{display:flex;align-items:center;gap:7px;min-width:0}
-.field-value{flex:1;min-width:0;padding:5px 7px;border-radius:7px;color:#10283F;font:600 12.5px/1.45 var(--mono);direction:ltr;text-align:left;overflow-wrap:anywhere;transition:.14s ease}
+.card-body{display:flex;flex-direction:column;gap:14px;flex:1;padding:16px 18px 18px}
+.card-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.copy-all-btn{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:6px 12px;border:1px solid var(--line-strong);border-radius:10px;background:transparent;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.copy-all-btn svg{width:15px;height:15px}
+.copy-all-btn .n{padding:0 7px;border-radius:999px;background:var(--field);color:var(--muted);font:600 11px/18px var(--mono)}
+.copy-all-btn:hover{border-color:var(--gold);background:var(--gold-pale)}
+.copy-all-btn.copied{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+.action-hint{color:var(--subtle);font-size:12px}
+
+/* שדות הפקודות */
+.fields{display:flex;flex-direction:column;background:var(--field);border:1px solid var(--field-line);border-radius:12px;overflow:hidden}
+.field-block{display:flex;flex-direction:column;gap:4px;padding:10px 12px}
+.field-block+.field-block{border-top:1px solid var(--field-line)}
+.field{display:flex;align-items:flex-start;gap:12px}
+.field-label{flex:0 0 34%;display:flex;align-items:flex-start;gap:9px;min-width:0;padding-top:4px;color:var(--muted);font-size:12.5px;font-weight:500;line-height:1.4}
+.label-text{flex:1;min-width:0;padding-top:1px}
+.kind{flex:none;width:24px;height:24px;margin-top:-2px;border-radius:7px;display:grid;place-items:center}
+.kind svg{width:13px;height:13px}
+.kind-price{background:var(--k-price-bg);color:var(--k-price)}
+.kind-pay{background:var(--k-pay-bg);color:var(--k-pay)}
+.kind-code{background:var(--k-code-bg);color:var(--k-code)}
+.kind-remark{background:var(--k-remark-bg);color:var(--k-remark)}
+.kind-other{background:var(--k-other-bg);color:var(--k-other)}
+.values{flex:1;min-width:0;display:flex;flex-direction:column;align-items:stretch;gap:5px}
+.value-row{display:flex;align-items:center;gap:6px;min-width:0}
+.field-value{flex:1;min-width:0;padding:5px 8px;border-radius:8px;color:var(--code);font:500 13.5px/1.45 var(--mono);direction:ltr;text-align:left;overflow-wrap:anywhere;transition:background .14s}
 .field-value:not(.is-editable){cursor:copy}
-.field-value:not(.is-editable):hover{background:#EEF3F7}
-.copy-btn{flex:none;width:32px;height:32px;border:1px solid #D5DEE6;border-radius:8px;background:#fff;color:#65788B;display:grid;place-items:center;cursor:pointer;transition:.14s ease}
+.field-value:not(.is-editable):hover{background:var(--field-hover)}
+.copy-btn{flex:none;width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:background .14s,border-color .14s,color .14s}
 .copy-btn svg{width:14px;height:14px}
-.copy-btn:hover{border-color:#BE9A59;background:var(--gold-pale);color:var(--navy)}
+.copy-btn:hover{border-color:var(--gold);background:var(--gold-pale);color:var(--text)}
 .copy-btn.copied{background:var(--green);border-color:var(--green);color:#fff}
-.field-note{padding-inline-start:calc(36% + 14px);color:var(--muted);font-size:10.5px;font-style:normal;line-height:1.45}
-.section-label{margin-top:2px;color:#8A692F;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-.dest-list{display:flex;flex-wrap:wrap;gap:6px;direction:ltr;justify-content:flex-start}
-.dest-tag{padding:4px 8px;border:1px solid #E0E5EA;border-radius:7px;background:#F7F9FB;color:#476079;font:700 10px var(--mono)}
-.benefits{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
-.benefits li{position:relative;display:flex;align-items:flex-start;gap:8px;padding-right:17px;color:#4C6174;font-size:12px;line-height:1.5}
-.benefits li::before{content:'✓';position:absolute;right:0;top:1px;color:var(--green);font-size:11px;font-weight:900}
-.benefit-text{flex:1}
-.note{padding:10px 12px;border:1px solid #E9D7B6;border-right:4px solid var(--gold);border-radius:9px;background:var(--gold-pale);color:#495D70;font-size:11.5px;line-height:1.55}
-.note.warn{border-color:#F0C7C2;border-right-color:var(--red);background:var(--red-soft);color:#7B342E}
-.remove-line-btn{flex:none;width:24px;height:24px;border:1px solid #E9B9B4;border-radius:7px;background:#FFF3F1;color:var(--red);display:grid;place-items:center;padding:0;font-size:15px;cursor:pointer}
-.add-btn{align-self:flex-start;padding:5px 9px;border:1px dashed #CAA96C;border-radius:8px;background:var(--gold-pale);color:#8A692F;font:800 10.5px var(--mono);cursor:pointer}
-.values .add-btn{align-self:flex-end}
+.field-note{padding-inline-start:33px;color:var(--gold-ink);font-size:12px;line-height:1.45}
 
-/* edit mode */
-.is-editable{outline:none;min-width:40px;background:#FFF7E9;border-bottom:1px dashed #B88A43;border-radius:4px;cursor:text}
-.is-editable:focus{box-shadow:0 0 0 3px rgba(184,138,67,.13)}
-.airline-name.is-editable{padding:2px 4px;background:rgba(255,247,233,.12);border-bottom-color:#E4C889}
+/* יעדים, הטבות, הערות */
+.section-label{display:flex;align-items:center;gap:10px;color:var(--gold-ink);font-size:12.5px;font-weight:600}
+.section-label::after{content:'';flex:1;height:1px;background:var(--line)}
+.dest-list{display:flex;flex-wrap:wrap;gap:6px}
+.dest-tag{direction:ltr;padding:2px 9px;border:1px solid var(--line);border-radius:7px;background:var(--field);color:var(--muted);font:500 11.5px/20px var(--mono)}
+.benefits{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.benefits li{position:relative;display:flex;align-items:flex-start;gap:8px;padding-inline-start:24px;color:var(--text-2);font-size:13.5px;line-height:1.6}
+.benefits li::before{content:'✓';position:absolute;inset-inline-start:0;top:3px;width:16px;height:16px;border-radius:50%;display:grid;place-items:center;background:var(--green-soft);color:var(--green);font-size:9.5px;font-weight:700;line-height:1}
+.benefit-text{flex:1}
+.note{padding:10px 13px;border:1px solid var(--note-line);border-inline-start:3px solid var(--gold);border-radius:10px;background:var(--note-bg);color:var(--note-text);font-size:13px;line-height:1.6}
+.note.warn{border-color:var(--warn-line);border-inline-start-color:var(--red);background:var(--warn-bg);color:var(--warn-text)}
+
+/* מצב עריכה */
+.is-editable{outline:none;min-width:40px;background:var(--edit-bg);border-bottom:1px dashed var(--gold);border-radius:4px;cursor:text}
+.is-editable:focus{box-shadow:0 0 0 3px rgba(201,166,108,.2)}
+.airline-name.is-editable{padding:2px 4px;background:rgba(255,247,233,.1);border-bottom-color:#E4C889}
 [data-ph]:empty::before{content:attr(data-ph);color:var(--subtle);font-style:italic}
 .airline-name[data-ph]:empty::before{color:#D8C6A6}
-.edit-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px;padding-top:12px;border-top:1px dashed #D9C29A}
-.edit-hint{flex:1;min-width:150px;color:var(--muted);font-size:10.5px}
-.btn{min-height:36px;padding:7px 12px;border:1px solid var(--line-strong);border-radius:8px;background:#fff;color:var(--navy);font-weight:800;font-size:11.5px;cursor:pointer}
-.btn-primary{background:var(--navy);border-color:var(--navy);color:#fff}
-.btn:hover{border-color:#B99659}
-.btn-primary:hover{background:var(--navy-deep)}
+.remove-line-btn{flex:none;width:26px;height:26px;padding:0;border:1px solid var(--warn-line);border-radius:7px;background:var(--warn-bg);color:var(--red);display:grid;place-items:center;font-size:15px;cursor:pointer}
+.add-btn{align-self:flex-start;padding:5px 10px;border:1px dashed var(--gold);border-radius:8px;background:var(--gold-pale);color:var(--gold-ink);font-size:12px;font-weight:600;cursor:pointer}
+.values .add-btn{align-self:flex-end}
+.edit-bar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:2px;padding-top:12px;border-top:1px dashed var(--note-line)}
+.edit-hint{flex:1;min-width:150px;color:var(--muted);font-size:12px}
+.btn{min-height:36px;padding:7px 14px;border:1px solid var(--line-strong);border-radius:9px;background:var(--card);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;transition:background .15s,border-color .15s}
+.btn:hover{border-color:var(--gold)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
 
-.empty-state{display:none;text-align:center;padding:80px 20px;color:var(--subtle)}
+/* מצב ריק */
+.empty-state{display:none;padding:80px 20px;text-align:center;color:var(--subtle)}
 .empty-state.show{display:block}
-.empty-state svg{margin-bottom:12px;opacity:.35}
-.empty-state strong{display:block;color:var(--muted);font-size:15px;margin-bottom:4px}
+.empty-state svg{width:40px;height:40px;margin-bottom:12px;opacity:.45}
+.empty-state strong{display:block;margin-bottom:4px;color:var(--muted);font-size:16px;font-weight:600}
 
-.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,14px);z-index:200;display:flex;align-items:center;gap:8px;max-width:calc(100vw - 32px);padding:10px 15px;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:#0B2036;color:#fff;box-shadow:0 12px 34px rgba(11,32,54,.28);font-size:12px;font-weight:700;opacity:0;pointer-events:none;transition:.18s ease}
+/* הודעה קופצת */
+.toast{position:fixed;bottom:22px;left:50%;z-index:200;display:flex;align-items:center;gap:8px;max-width:calc(100vw - 32px);padding:10px 15px;border:1px solid rgba(255,255,255,.12);border-radius:11px;background:var(--toast);color:#fff;box-shadow:0 12px 34px rgba(8,20,32,.28);font-size:13px;font-weight:500;opacity:0;pointer-events:none;transform:translate(-50%,14px);transition:opacity .18s ease,transform .18s ease}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-.toast code{max-width:56vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#E1C58E;font:11px var(--mono);direction:ltr;unicode-bidi:isolate}
+.toast code{max-width:56vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#E1C58E;font:12px var(--mono);direction:ltr;unicode-bidi:isolate}
 
-.modal-backdrop{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(11,32,54,.6);backdrop-filter:blur(4px)}
+/* חלון סיסמה */
+.modal-backdrop{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(8,20,32,.6);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 .modal-backdrop.show{display:flex}
-.modal-box{width:100%;max-width:360px;padding:24px;border:1px solid var(--line);border-radius:15px;background:#fff;box-shadow:0 24px 80px rgba(0,0,0,.2);animation:modalIn .16s ease-out}
+.modal-box{width:100%;max-width:360px;padding:24px;border:1px solid var(--line);border-radius:16px;background:var(--card);box-shadow:0 24px 80px rgba(0,0,0,.25);animation:modalIn .16s ease-out}
 @keyframes modalIn{from{opacity:0;transform:translateY(8px) scale(.98)}}
-.modal-box h3{display:flex;align-items:center;gap:8px;margin:0 0 6px;color:var(--navy-deep);font-family:var(--serif);font-size:20px}
-.modal-box h3 svg{width:16px;height:16px}
-.modal-box p{margin:0 0 15px;color:var(--muted);font-size:12px;line-height:1.5}
-.modal-box input{width:100%;height:44px;padding:0 12px;border:1px solid var(--line-strong);border-radius:9px;background:#F8FAFC;color:var(--navy-deep);font:13px var(--mono);direction:ltr;text-align:left;outline:none}
-.modal-box input:focus{border-color:#B88A43;box-shadow:0 0 0 3px rgba(184,138,67,.12)}
-.modal-error{min-height:14px;margin-top:7px;color:var(--red);font-size:11px;font-weight:700}
+.modal-box h3{display:flex;align-items:center;gap:8px;margin:0 0 6px;color:var(--text);font-size:19px;font-weight:600}
+.modal-box h3 svg{width:17px;height:17px;color:var(--gold)}
+.modal-box p{margin:0 0 15px;color:var(--muted);font-size:13px;line-height:1.55}
+.modal-box input{width:100%;height:44px;padding:0 12px;border:1px solid var(--line-strong);border-radius:10px;background:var(--field);color:var(--text);font:14px var(--mono);direction:ltr;text-align:left;outline:none}
+.modal-box input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,166,108,.18)}
+.modal-error{min-height:16px;margin-top:7px;color:var(--red);font-size:12px;font-weight:600}
 .modal-actions{display:flex;gap:8px;margin-top:14px}
 .modal-actions .btn{flex:1}
-footer{max-width:1240px;margin:40px auto 0;padding:16px 24px 0;border-top:1px solid var(--line);color:#9AA8B5;text-align:center;font:10px var(--mono)}
 
-@media (max-width:820px){
-  .grid{grid-template-columns:1fr}
+footer{max-width:1240px;margin:40px auto 0;padding:16px 24px 0;border-top:1px solid var(--line);color:var(--subtle);font-size:12px;text-align:center}
+
+/* =====================================================================
+   מסכים צרים
+   ===================================================================== */
+@media (max-width:900px){
+  .bar-inner{flex-wrap:nowrap;overflow-x:auto;padding:10px 16px;scrollbar-width:none;scroll-snap-type:x proximity;
+    -webkit-mask-image:linear-gradient(to left,transparent 0,#000 16px,#000 calc(100% - 16px),transparent 100%);
+            mask-image:linear-gradient(to left,transparent 0,#000 16px,#000 calc(100% - 16px),transparent 100%)}
+  .bar-inner::-webkit-scrollbar{display:none}
+  .chip{scroll-snap-align:center}
 }
 @media (max-width:620px){
-  header{padding:18px 14px 20px}
-  .eyebrow{align-items:flex-start;letter-spacing:.08em}
-  .head-controls{width:100%;order:2}
-  .ctrl-btn{flex:1;justify-content:center}
-  .title-row{align-items:flex-start}
-  h1{font-size:28px}
-  .stat-pill{font-size:11px}
-  .bar-inner{padding:9px 14px 11px;scroll-snap-type:x proximity}
-  .chip{scroll-snap-align:center}
-  main{padding:15px 12px 0}
-  .grid{gap:13px}
+  .watermark{height:42vh}
+  header{padding:16px 16px 18px}
+  .head-inner{flex-direction:column;align-items:stretch;gap:14px}
+  .mark{width:42px;height:42px;border-radius:12px}
+  .mark svg{width:21px;height:21px}
+  h1{font-size:22px}
+  .head-side{flex-direction:column-reverse;align-items:stretch}
+  .stat-pill{align-self:flex-start;font-size:12px}
+  .head-controls{justify-content:stretch}
+  .ctrl-btn{flex:1 1 auto;font-size:12px;padding:6px 10px}
+  main{padding:14px 12px 0}
+  .grid{gap:12px}
   .card{border-radius:14px}
-  .card-top{padding:15px}
-  .card-body{padding:13px 14px 15px}
+  .card-top{padding:14px}
+  .card-head{gap:10px}
+  .card-body{padding:13px 13px 15px;gap:13px}
   .airline-name{font-size:17px}
-  .field{flex-direction:column;gap:3px}
-  .field-label{flex:auto;width:100%;padding-top:0;font-size:10.5px}
+  .field{flex-direction:column;align-items:stretch;gap:5px}
+  .field-label{flex:auto;width:100%;padding-top:0;font-size:12px;align-items:center}
+  .kind{margin-top:0;width:22px;height:22px}
   .field-note{padding-inline-start:0}
-  .field-value{font-size:12px;padding-inline:4px}
-  .copy-btn{width:34px;height:34px}
-  .card-actions{justify-content:space-between}
+  .field-value{font-size:13px;padding-inline:6px}
+  .copy-btn{width:36px;height:36px}
   .action-hint{display:none}
+  .copy-all-btn{flex:1;justify-content:center;min-height:40px}
 }
-@media (max-width:380px){
-  .chip{font-size:11.5px}
-  .card-head{gap:8px}
-  .nofee-badge{display:none}
+@media (max-width:400px){
+  .chip{font-size:12.5px}
+  .toggle-text{display:none}
+  .active-toggle{padding:0 8px}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -225,41 +360,121 @@ footer{max-width:1240px;margin:40px auto 0;padding:16px 24px 0;border-top:1px so
 </head>
 <body>
 
+<!-- סימן מים: מגדל פיקוח, טרמינל, שרוול עלייה, מסלול ומטוסים -->
+<svg class="watermark" viewBox="0 0 1600 700" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
+  <defs>
+    <g id="wm-jet">
+      <path style="fill:var(--wm-fill)" d="M24 40 L5 3 H31 L86 40 Z"/>
+      <path style="fill:var(--wm-fill)" d="M10 38 H262 C292 38 314 47 318 54 C314 61 296 67 266 67 H74 C48 67 25 55 10 43 Z"/>
+      <path d="M284 45 H302 L309 51 H289 Z"/>
+      <path d="M72 50 H240" stroke-dasharray="0.1 11" stroke-width="4.5"/>
+      <path d="M252 43 V60"/>
+      <path style="fill:var(--wm-fill)" d="M28 51 L4 63 H18 L62 54 Z"/>
+      <path style="fill:var(--wm-fill)" d="M174 64 L118 88 H138 L212 64 Z"/>
+      <path d="M196 67 V74"/>
+      <path style="fill:var(--wm-fill)" d="M182 74 H218 A8 8 0 0 1 218 90 H182 A8 8 0 0 1 182 74 Z"/>
+      <path d="M211 74 V90"/>
+    </g>
+    <path id="wm-cloud" d="M0 42 C-4 28 10 18 26 22 C32 6 58 0 72 14 C82 4 104 8 106 26 C120 24 130 36 124 42 Z"/>
+  </defs>
+  <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- עננים -->
+    <use href="#wm-cloud" transform="translate(880 130)"/>
+    <use href="#wm-cloud" transform="translate(330 150) scale(.75)"/>
+    <use href="#wm-cloud" transform="translate(1180 270) scale(.6)"/>
+
+    <!-- מטוס רחוק -->
+    <g transform="translate(1440 118) scale(-.4 .4)"><use href="#wm-jet"/></g>
+
+    <!-- מטוס ממריא -->
+    <g transform="translate(560 236) rotate(-13) scale(.8)">
+      <path d="M-16 46 H-170 M-16 58 H-118" stroke-dasharray="16 14" opacity=".6"/>
+      <use href="#wm-jet"/>
+    </g>
+
+    <!-- האנגר -->
+    <path d="M24 560 V506 Q86 446 148 506 V560"/>
+    <path d="M50 560 V520 H122 V560 M74 520 V560 M98 520 V560" stroke-width="2"/>
+
+    <!-- מגדל פיקוח -->
+    <path d="M196 560 V338 M244 560 V338"/>
+    <path d="M184 560 V532 H256 V560"/>
+    <path d="M178 338 H262"/>
+    <path style="fill:var(--wm-fill)" d="M186 338 L172 292 H268 L254 338 Z"/>
+    <path d="M196 292 L203 338 M220 292 V338 M244 292 L237 338" stroke-width="2"/>
+    <path d="M176 292 L190 272 H250 L264 292"/>
+    <path d="M220 272 V236 M208 250 H232"/>
+    <circle cx="220" cy="231" r="5"/>
+
+    <!-- טרמינל -->
+    <path d="M300 450 Q725 330 1150 430" stroke-width="5"/>
+    <path d="M320 462 Q725 352 1130 442"/>
+    <path d="M340 560 V457 M1110 560 V438"/>
+    <path d="M380 560 V453 M430 560 V442 M480 560 V432 M530 560 V424 M580 560 V418 M630 560 V413 M680 560 V410 M730 560 V408 M780 560 V408 M830 560 V409 M880 560 V411 M930 560 V416 M980 560 V421 M1030 560 V429 M1080 560 V438" stroke-width="2"/>
+    <path d="M340 500 H1110" stroke-width="2.5"/>
+
+    <!-- מטוס בחניה -->
+    <g transform="translate(1530 463) scale(-1 1)">
+      <use href="#wm-jet"/>
+      <path d="M152 68 V87 M280 67 V87"/>
+      <circle cx="152" cy="91" r="5"/>
+      <circle cx="280" cy="91" r="5"/>
+    </g>
+
+    <!-- שרוול עלייה למטוס -->
+    <path style="fill:var(--wm-fill)" d="M1110 492 L1272 504 V522 L1110 512 Z"/>
+    <path d="M1165 496 V516 M1220 500 V519" stroke-width="2"/>
+    <path d="M1205 520 V550"/>
+    <circle cx="1198" cy="554" r="5"/>
+    <circle cx="1212" cy="554" r="5"/>
+
+    <!-- קרקע ומסלול -->
+    <path d="M0 560 H1600"/>
+    <path d="M0 604 H1600 M0 688 H1600" stroke-width="2.5"/>
+    <path d="M30 604 H1600 M30 688 H1600" stroke-dasharray="0.1 90" stroke-width="7"/>
+    <path d="M190 646 H1600" stroke-dasharray="48 34"/>
+    <path d="M60 618 H140 M60 632 H140 M60 660 H140 M60 674 H140" stroke-width="2.5"/>
+  </g>
+</svg>
+
 <header>
   <div class="head-inner">
-    <div class="eyebrow">
-      <div class="eyebrow-left"><span class="line"></span>AMSALEM TOURS · חטיבת משרדי ממשלה</div>
+    <div class="brand">
+      <div class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+      </div>
+      <div>
+        <div class="eyebrow">AMSALEM TOURS · חטיבת משרדי ממשלה</div>
+        <h1>הסכמי קורפורייט <em>· חברות תעופה</em></h1>
+      </div>
+    </div>
+    <div class="head-side">
+      <div class="stat-pill">מציג <b id="count">0</b> מתוך <b id="total">0</b> הסכמים</div>
       <div class="head-controls">
-        <button class="ctrl-btn" id="showInactiveBtn" type="button" aria-pressed="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-          <span>הצג לא פעילים</span>
-        </button>
+        <button class="ctrl-btn" id="themeBtn" type="button"></button>
         <button class="ctrl-btn" id="resetBtn" type="button" title="איפוס כל השינויים (דורש סיסמה)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
           <span>איפוס שינויים</span>
         </button>
       </div>
     </div>
-    <div class="title-row">
-      <h1>הסכמי קורפורייט <em>· חברות תעופה</em></h1>
-      <div class="stat-pill">מציג <b id="count">0</b> מתוך <b id="total">0</b> הסכמים</div>
-    </div>
   </div>
 </header>
 
 <nav class="airline-bar" id="airlineBar" aria-label="בחירת הסכם">
-<div class="bar-inner" id="chips"></div>
+  <div class="bar-inner" id="chips"></div>
 </nav>
 
 <main id="main">
   <div class="grid" id="grid"></div>
   <div class="empty-state" id="empty">
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
-    <strong id="emptyTitle">אין הסכמים להצגה</strong><div id="emptyText">אפשר להציג שוב הסכמים לא פעילים</div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+    <strong>אין הסכמים פעילים להצגה</strong>
+    <div>הסכמים שלא בתוקף נמצאים בכפתור ״לא בתוקף״ בסוף שורת הלחצנים</div>
   </div>
 </main>
 
-<footer>מסמך פנימי · Amsalem Tours</footer>
+<footer>מסמך פנימי · Amsalem Tours · עריכות נשמרות בדפדפן זה בלבד</footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -538,31 +753,60 @@ function effectiveItem(base){
 /* =====================================================================
    מצב
    ===================================================================== */
-const ui = Object.assign({showInactive: true}, store.get(UI_KEY, {}));
-let selectedId = idFromHash();
-let editingId  = null;
-let unlocked   = !!store.get(AUTH_KEY, 0, true);
+let ui = store.get(UI_KEY, {});
+if(!ui || typeof ui !== 'object') ui = {};
+const saveUi = () => store.set(UI_KEY, ui);
+
+let selectedId  = idFromHash();
+let editingId   = null;
+let archiveOpen = false; // הסכמים שלא בתוקף מוסתרים כברירת מחדל ונפתחים מהכפתור בסוף השורה
+let unlocked    = !!store.get(AUTH_KEY, 0, true);
 let pendingAction = null;
-let searchQuery = '';
 
 const $ = id => document.getElementById(id);
 const grid = $('grid'), chipsEl = $('chips'), barEl = $('airlineBar'), mainEl = $('main');
 const countEl = $('count'), totalEl = $('total'), emptyEl = $('empty'), toastEl = $('toast');
-const showInactiveBtn = $('showInactiveBtn'), resetBtn = $('resetBtn');
-const searchInput = $('searchInput'), clearSearch = $('clearSearch');
-const emptyTitle = $('emptyTitle'), emptyText = $('emptyText');
+const themeBtn = $('themeBtn'), resetBtn = $('resetBtn');
 const pwModal = $('pwModal'), pwInput = $('pwInput'), pwError = $('pwError');
+
+/* =====================================================================
+   אייקונים
+   ===================================================================== */
+const svg = (inner, sw = 2) =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${inner}</svg>`;
+
+const ICON = {
+  copy:   svg('<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
+  check:  svg('<polyline points="20 6 9 17 4 12"/>', 2.5),
+  pencil: svg('<path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>'),
+  grid:   svg('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'),
+  sun:    svg('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>'),
+  moon:   svg('<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>'),
+  eye:    svg('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>'),
+  archive: svg('<rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/>'),
+  chevron: svg('<path d="m6 9 6 6 6-6"/>'),
+};
+
+/* אייקון קטן לפי סוג השדה — עוזר לסרוק את הכרטיס במבט */
+const KIND_ICON = {
+  price:  svg('<path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9Z"/><circle cx="7.5" cy="7.5" r="1.3"/>'),
+  pay:    svg('<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h3"/>'),
+  code:   svg('<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2M13 11v2M13 17v2"/>'),
+  remark: svg('<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/>'),
+  other:  svg('<path d="m4 17 6-6-6-6"/><path d="M12 19h8"/>'),
+};
+function labelKind(label){
+  const l = String(label || '').toLowerCase();
+  if(l.includes('תמחור')) return 'price';
+  if(l.includes('תשלום')) return 'pay';
+  if(l.includes('tour code') || l.includes('designator')) return 'code';
+  if(l.includes('קורפורייט') || l.includes('corporate') || l.includes('srclid') || l.includes('הושבה') || l.includes('הער')) return 'remark';
+  return 'other';
+}
 
 /* =====================================================================
    עזרי DOM
    ===================================================================== */
-const ICON = {
-  copy:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
-  check:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
-  pencil: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>',
-  grid:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
-};
-
 /* h('div', {class:'x', text:'...', onclick:fn}, ...children) */
 function h(tag, attrs = {}, ...kids){
   const el = document.createElement(tag);
@@ -619,6 +863,8 @@ function bubble(code){
 
 const removeBtn = (onClick, title) =>
   h('button', {type: 'button', class: 'remove-line-btn', title, 'aria-label': title, text: '×', onclick: onClick});
+
+const sectionLabel = text => h('div', {class: 'section-label', text});
 
 /* =====================================================================
    העתקה + הודעות
@@ -680,7 +926,10 @@ function valueRow(text, editing, onCommit, onRemove){
 }
 
 function renderField(f, id, idx, editing){
-  const label = editable('div', 'field-label', f.label, editing, v => patchField(id, idx, {label: v}), 'כותרת');
+  const kind = labelKind(f.label);
+  const label = h('div', {class: 'field-label'},
+    h('span', {class: 'kind kind-' + kind, html: KIND_ICON[kind]}),
+    editable('span', 'label-text', f.label, editing, v => patchField(id, idx, {label: v}), 'כותרת'));
   const values = h('div', {class: 'values'});
 
   if(f.multi){
@@ -721,7 +970,7 @@ function renderBenefits(item, editing){
   };
   item.benefits.forEach(b => addItem(b));
 
-  const out = [h('div', {class: 'section-label', text: 'הטבות הסכם'}), ul];
+  const out = [sectionLabel('הטבות הסכם'), ul];
   if(editing) out.push(h('button', {type: 'button', class: 'add-btn', text: '+ הוספת הטבה', onclick: () => addItem('', true)}));
   return out;
 }
@@ -749,20 +998,24 @@ function renderCard(item){
   const editing = editingId === id;
 
   const name = editable('h2', 'airline-name', item.name, editing, v => patchCard(id, {name: v}), 'שם ההסכם');
-  const codes = h('div', {class: 'codes'},
-    item.codes.map(c => h('span', {class: 'code-chip'}, logo(c, 'code-logo'), h('span', {text: c}))));
+
+  const meta = h('div', {class: 'card-meta'},
+    item.codes.map(c => h('span', {class: 'code-chip'}, logo(c, 'code-logo'), h('span', {text: c}))),
+    item.noFee && h('span', {class: 'badge badge-gold', text: 'ללא עמלה'}),
+    !item.active && h('span', {class: 'badge badge-red', text: 'לא בתוקף'}));
 
   const toggle = h('button', {
     type: 'button',
     class: 'active-toggle' + (item.active ? ' is-active' : ''),
     'aria-pressed': String(item.active),
-    title: 'שינוי סטטוס ההסכם',
+    title: item.active ? 'סימון ההסכם כלא פעיל' : 'סימון ההסכם כפעיל',
     onclick: () => requireAuth(() => {
       patchCard(id, {active: !item.active});
+      if(item.active && editingId === id && selectedId !== id && !archiveOpen) editingId = null;
       render();
-      toast(item.active ? 'ההסכם סומן כלא פעיל' : 'ההסכם סומן כפעיל');
+      toast(item.active ? 'ההסכם הועבר ל״לא בתוקף״ בסוף שורת הלחצנים' : 'ההסכם חזר להסכמים הפעילים');
     })
-  }, h('span', {text: item.active ? 'פעיל' : 'לא פעיל'}), h('span', {class: 'switch'}));
+  }, h('span', {class: 'toggle-text', text: item.active ? 'פעיל' : 'לא פעיל'}), h('span', {class: 'switch'}));
 
   const editLabel = editing ? 'סיום עריכה' : 'עריכת הכרטיס';
   const editBtn = h('button', {
@@ -775,35 +1028,35 @@ function renderCard(item){
 
   const top = h('div', {class: 'card-top'},
     h('div', {class: 'card-head'},
-      h('div', {class: 'card-title'}, name, codes),
-      h('div', {class: 'card-top-right'},
-        toggle,
-        item.noFee && h('span', {class: 'nofee-badge', text: 'ללא עמלה'}),
-        editBtn)));
+      h('div', {class: 'card-title'}, name, meta),
+      h('div', {class: 'card-tools'}, toggle, editBtn)));
 
+  const commandLines = () => item.fields.flatMap(f => f.multi ? f.multi : [f.value]).map(v => (v || '').trim()).filter(Boolean);
+  const copyAllHtml = () => ICON.copy + `<span>העתקת כל הפקודות</span><span class="n">${commandLines().length}</span>`;
   const copyAllBtn = h('button', {
     type: 'button', class: 'copy-all-btn',
     title: 'מעתיק את כל ערכי הפקודות, שורה לכל ערך',
-    html: ICON.copy + '<span>העתק את כל הפקודות</span>'
+    html: copyAllHtml()
   });
   copyAllBtn.addEventListener('click', async () => {
-    const lines = item.fields.flatMap(f => f.multi ? f.multi : [f.value]).map(v => (v || '').trim()).filter(Boolean);
+    const lines = commandLines();
     if(!lines.length) return;
     if(await copyText(lines.join('\n'))){
       copyAllBtn.classList.add('copied');
-      copyAllBtn.innerHTML = ICON.check + '<span>הכול הועתק</span>';
+      copyAllBtn.innerHTML = ICON.check + '<span>כל הפקודות הועתקו</span>';
       toast('כל הפקודות הועתקו');
-      setTimeout(() => { copyAllBtn.classList.remove('copied'); copyAllBtn.innerHTML = ICON.copy + '<span>העתק את כל הפקודות</span>'; }, 1400);
+      clearTimeout(copyAllBtn._t);
+      copyAllBtn._t = setTimeout(() => { copyAllBtn.classList.remove('copied'); copyAllBtn.innerHTML = copyAllHtml(); }, 1400);
     } else toast('ההעתקה נכשלה');
   });
 
   const body = h('div', {class: 'card-body'},
-    h('div', {class:'card-actions'}, copyAllBtn, h('span', {class:'action-hint', text:'או העתיקו פקודה בודדת בלחיצה'})),
+    h('div', {class: 'card-actions'}, copyAllBtn, h('span', {class: 'action-hint', text: 'או לחיצה על פקודה בודדת להעתקתה'})),
     h('div', {class: 'fields'}, item.fields.map((f, idx) => renderField(f, id, idx, editing))));
 
   if(item.destinations?.length){
     body.append(
-      h('div', {class: 'section-label', text: item.destLabel || 'יעדים'}),
+      sectionLabel(item.destLabel || 'יעדים'),
       h('div', {class: 'dest-list'}, item.destinations.map(d => h('span', {class: 'dest-tag', text: d}))));
   }
   if(item.benefits.length || editing) body.append(...renderBenefits(item, editing));
@@ -816,7 +1069,7 @@ function renderCard(item){
   return h('article', {
     class: 'card' + (item.active ? '' : ' inactive') + (editing ? ' editing' : ''),
     'data-id': id
-  }, h('div', {class: 'stamp', text: 'לא בתוקף'}), top, h('div', {class: 'perf'}), body);
+  }, top, body);
 }
 
 /* =====================================================================
@@ -838,7 +1091,7 @@ function chipFor(item){
     h('span', {class: 'chip-label', text: item.short || item.name}));
 }
 
-function renderChips(visible){
+function renderChips(active, inactive, open){
   const allBtn = h('button', {
     type: 'button',
     class: 'chip chip-all' + (selectedId ? '' : ' on'),
@@ -847,8 +1100,42 @@ function renderChips(visible){
   },
     h('span', {class: 'bubbles'}, h('span', {class: 'bubble bubble-all', html: ICON.grid})),
     h('span', {class: 'chip-label', text: 'הכל'}),
-    h('span', {class: 'chip-count', text: visible.length}));
-  chipsEl.replaceChildren(allBtn, ...visible.map(chipFor));
+    h('span', {class: 'chip-count', text: active.length + (open ? inactive.length : 0)}));
+
+  const kids = [allBtn, ...active.map(chipFor)];
+
+  // הסכמים שלא בתוקף — כפתור מקובץ בסוף השורה, נפתח לפי דרישה
+  if(inactive.length){
+    kids.push(
+      h('span', {class: 'chip-sep', 'aria-hidden': 'true'}),
+      h('button', {
+        type: 'button',
+        class: 'chip chip-archive' + (open ? ' open' : ''),
+        'aria-expanded': String(open),
+        title: open ? 'הסתרת ההסכמים שלא בתוקף' : 'הצגת ההסכמים שלא בתוקף',
+        onclick: toggleArchive
+      },
+        h('span', {class: 'bubbles'}, h('span', {class: 'bubble bubble-all', html: ICON.archive})),
+        h('span', {class: 'chip-label', text: 'לא בתוקף'}),
+        h('span', {class: 'chip-count', text: inactive.length}),
+        h('span', {class: 'chev', html: ICON.chevron})));
+    if(open) kids.push(...inactive.map(chipFor));
+  }
+  chipsEl.replaceChildren(...kids);
+}
+
+function toggleArchive(){
+  archiveOpen = !archiveOpen;
+  // סגירה בזמן שמוצג הסכם לא בתוקף — חוזרים לכל ההסכמים
+  if(!archiveOpen && selectedId){
+    const base = BASE_DATA.find(b => b.id === selectedId);
+    if(base && !effectiveItem(base).active){ selectedId = null; syncHash(); }
+  }
+  render();
+  const btn = chipsEl.querySelector('.chip-archive');
+  if(archiveOpen && btn && chipsEl.scrollWidth > chipsEl.clientWidth){
+    btn.scrollIntoView({block: 'nearest', inline: 'start', behavior: 'smooth'});
+  }
 }
 
 function select(id){
@@ -861,12 +1148,20 @@ function select(id){
   const top = mainEl.getBoundingClientRect().top + window.scrollY - barEl.offsetHeight - 10;
   if(window.scrollY > top) window.scrollTo({top});
 
-  // במובייל — מרכזים את הלחצן שנבחר בסרגל הגלילה
+  // כשהסרגל נגלל (מובייל/טאבלט) — מרכזים את הלחצן שנבחר
   const chip = chipsEl.querySelector('.chip.on');
   if(chip && chipsEl.scrollWidth > chipsEl.clientWidth){
     chip.scrollIntoView({block: 'nearest', inline: 'center', behavior: 'smooth'});
   }
 }
+
+/* גלגלת העכבר גוללת את הסרגל לרוחב כשהוא לא נכנס במסך */
+chipsEl.addEventListener('wheel', e => {
+  if(chipsEl.scrollWidth <= chipsEl.clientWidth + 1) return;
+  if(Math.abs(e.deltaX) >= Math.abs(e.deltaY)) return;
+  e.preventDefault();
+  chipsEl.scrollBy({left: -e.deltaY});
+}, {passive: false});
 
 /* קישור ישיר להסכם דרך כתובת הדף (#agr-3) */
 function idFromHash(){
@@ -879,35 +1174,36 @@ function syncHash(){
 window.addEventListener('hashchange', () => { selectedId = idFromHash(); render(); });
 
 /* =====================================================================
-   חיפוש ורינדור ראשי
+   רינדור ראשי
    ===================================================================== */
-function norm(s){ return String(s || '').toLocaleLowerCase('he').replace(/\s+/g,' ').trim(); }
-function itemMatches(item, q){
-  if(!q) return true;
-  const values = item.fields.flatMap(f => [f.label, f.value, ...(f.multi || []), f.note]);
-  const haystack = [item.name, item.short, ...item.codes, ...(item.destinations || []), ...(item.benefits || []), item.note, ...values].join(' · ');
-  return norm(haystack).includes(q);
-}
-
 function render(){
   const all = BASE_DATA.map(effectiveItem);
-  const q = norm(searchQuery);
-  const byStatus = all.filter(i => ui.showInactive || i.active);
-  const visible = byStatus.filter(i => itemMatches(i, q));
-  if(selectedId && !visible.some(i => i.id === selectedId)){ selectedId = null; syncHash(); }
-  const shown = selectedId ? visible.filter(i => i.id === selectedId) : visible;
+  const active = all.filter(i => i.active);
+  const inactive = all.filter(i => !i.active);
+  const sel = selectedId ? all.find(i => i.id === selectedId) : null;
+  if(selectedId && !sel){ selectedId = null; syncHash(); }
+  const open = archiveOpen || !!(sel && !sel.active); // קישור ישיר להסכם לא בתוקף פותח את הקבוצה
 
-  renderChips(visible);
-  grid.replaceChildren(...shown.map(renderCard));
-  grid.classList.toggle('single', shown.length === 1);
-  countEl.textContent = shown.length;
-  totalEl.textContent = all.length;
-  emptyEl.classList.toggle('show', shown.length === 0);
-  if(shown.length === 0){
-    emptyTitle.textContent = q ? 'לא נמצאה התאמה' : 'אין הסכמים להצגה';
-    emptyText.textContent = q ? 'נסו שם חברה, קוד IATA, פקודת Amadeus או יעד אחר' : 'אפשר להציג שוב הסכמים לא פעילים';
+  renderChips(active, inactive, open);
+
+  let cards = [];
+  if(sel){
+    cards = [renderCard(sel)];
+  } else {
+    cards = active.map(renderCard);
+    if(open && inactive.length){
+      cards.push(h('div', {class: 'grid-divider'},
+        h('span', {html: ICON.archive}), h('span', {text: 'לא בתוקף · ' + inactive.length})));
+      cards.push(...inactive.map(renderCard));
+    }
   }
-  if(clearSearch) clearSearch.classList.toggle('show', !!searchQuery);
+  const cardCount = sel ? 1 : active.length + (open ? inactive.length : 0);
+
+  grid.replaceChildren(...cards);
+  grid.classList.toggle('single', cardCount === 1);
+  countEl.textContent = cardCount;
+  totalEl.textContent = all.length;
+  emptyEl.classList.toggle('show', cardCount === 0);
 }
 
 /* =====================================================================
@@ -956,43 +1252,34 @@ document.addEventListener('keydown', e => {
   else if(editingId) stopEditing();
 });
 
-if(searchInput && clearSearch){
-  searchInput.addEventListener('input', () => {
-    searchQuery = searchInput.value;
-    selectedId = null;
-    syncHash();
-    render();
-  });
-  clearSearch.addEventListener('click', () => {
-    searchQuery = '';
-    searchInput.value = '';
-    render();
-    searchInput.focus();
-  });
-  document.addEventListener('keydown', e => {
-    const tag = e.target?.tagName;
-    const typing = tag === 'INPUT' || tag === 'TEXTAREA' || e.target?.isContentEditable;
-    if(e.key === '/' && !typing){ e.preventDefault(); searchInput.focus(); }
-    if(e.key === 'Escape' && document.activeElement === searchInput && searchInput.value){
-      searchQuery = ''; searchInput.value = ''; render();
-    }
-  });
+/* =====================================================================
+   מצב תצוגה (רך / כהה)
+   ===================================================================== */
+const darkMq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+const isDark = () => ui.theme ? ui.theme === 'dark' : !!(darkMq && darkMq.matches);
+
+function applyTheme(){
+  const root = document.documentElement;
+  if(ui.theme === 'dark' || ui.theme === 'light') root.setAttribute('data-theme', ui.theme);
+  else root.removeAttribute('data-theme');
+  const dark = isDark();
+  themeBtn.innerHTML = (dark ? ICON.sun : ICON.moon) + `<span>${dark ? 'מצב בהיר' : 'מצב כהה'}</span>`;
+  themeBtn.title = dark ? 'מעבר לתצוגה בהירה' : 'מעבר לתצוגה כהה';
+}
+themeBtn.addEventListener('click', () => {
+  ui.theme = isDark() ? 'light' : 'dark';
+  saveUi();
+  applyTheme();
+});
+if(darkMq){
+  const onSystemChange = () => { if(!ui.theme) applyTheme(); };
+  if(darkMq.addEventListener) darkMq.addEventListener('change', onSystemChange);
+  else if(darkMq.addListener) darkMq.addListener(onSystemChange);
 }
 
 /* =====================================================================
    כפתורי הכותרת
    ===================================================================== */
-function syncInactiveBtn(){
-  showInactiveBtn.classList.toggle('on', ui.showInactive);
-  showInactiveBtn.setAttribute('aria-pressed', String(ui.showInactive));
-}
-showInactiveBtn.addEventListener('click', () => {
-  ui.showInactive = !ui.showInactive;
-  store.set(UI_KEY, ui);
-  syncInactiveBtn();
-  render();
-});
-
 resetBtn.addEventListener('click', () => requireAuth(() => {
   if(!confirm('לאפס את כל השינויים והסימונים שבוצעו ולחזור לברירת המחדל?')) return;
   overrides = {};
@@ -1003,7 +1290,7 @@ resetBtn.addEventListener('click', () => requireAuth(() => {
 }));
 
 /* ===================================================================== */
-syncInactiveBtn();
+applyTheme();
 render();
 </script>
 </body>
